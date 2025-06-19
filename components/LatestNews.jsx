@@ -2,9 +2,11 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { urlFor } from '../lib/sanity'
 
-const LatestNews = () => {
-  const newsItems = [
+const LatestNews = ({ newsData }) => {
+  // Fallback news data if Sanity data is not available
+  const fallbackNews = [
     {
       id: 1,
       title: 'كلية البنات الطبية تحتفل بتخريج الدفعة الجديدة',
@@ -55,6 +57,9 @@ const LatestNews = () => {
     }
   ]
 
+  // Use Sanity data if available, otherwise fallback
+  const newsItems = newsData || fallbackNews
+
   const formatDate = (dateString) => {
     // Use simple date format to avoid hydration mismatch
     const date = new Date(dateString)
@@ -77,12 +82,12 @@ const LatestNews = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {newsItems.map((news) => (
-            <article key={news.id} className="bg-white rounded-xl card-shadow overflow-hidden group">
+          {newsItems.map((news, index) => (
+            <article key={news._id || news.id || index} className="bg-white rounded-xl card-shadow overflow-hidden group">
               <div className="relative h-48 overflow-hidden">
                 <img
-                  src={news.image}
-                  alt={news.title}
+                  src={news.featuredImage?.asset ? urlFor(news.featuredImage).width(400).height(300).url() : news.image || "data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='16' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eصورة الخبر%3C/text%3E%3C/svg%3E"}
+                  alt={news.featuredImage?.alt || news.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {
                     e.currentTarget.src = "data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='16' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eصورة الخبر%3C/text%3E%3C/svg%3E"
@@ -100,7 +105,7 @@ const LatestNews = () => {
                   <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  {formatDate(news.date)}
+                  {formatDate(news.publishedAt || news.date)}
                 </div>
 
                 <h3 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
@@ -112,7 +117,7 @@ const LatestNews = () => {
                 </p>
 
                 <Link
-                  href={`/news/${news.id}`}
+                  href={`/news/${news.slug?.current || news.id}`}
                   className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors duration-300"
                 >
                   اقرأ المزيد

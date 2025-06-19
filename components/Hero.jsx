@@ -2,8 +2,30 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { urlFor } from '../lib/sanity'
 
-const Hero = () => {
+const Hero = ({ heroData }) => {
+  // Fallback data if Sanity data is not available
+  const data = heroData || {
+    title: 'كلية البنات الطبية',
+    subtitle: 'تميز في التعليم الطبي والبحث العلمي لإعداد جيل من الطبيبات المتميزات',
+    subtitleEn: 'Girls Medical College - Excellence in Medical Education and Scientific Research',
+    statistics: [
+      { number: '15+', label: 'أقسام طبية', color: 'blue' },
+      { number: '500+', label: 'طالبة', color: 'purple' },
+      { number: '50+', label: 'عضو هيئة تدريس', color: 'pink' }
+    ],
+    primaryButton: { text: 'اكتشف المزيد عن الكلية', url: '/about' },
+    secondaryButton: { text: 'البرامج الدراسية', url: '/programs' },
+    heroImage: null,
+    deanCard: {
+      show: true,
+      title: 'معالي العميدة',
+      subtitle: 'كلمة ترحيب',
+      message: 'أهلاً وسهلاً بكم في كلية البنات الطبية، حيث نسعى لتحقيق التميز في التعليم الطبي...',
+      link: { text: 'اقرأ المزيد ←', url: '/dean-message' }
+    }
+  }
   return (
     <section className="relative min-h-screen flex items-center">
       {/* Background Pattern */}
@@ -24,40 +46,40 @@ const Hero = () => {
           <div className="space-y-8">
             <div className="space-y-4">
               <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                <span className="gradient-text">كلية البنات الطبية</span>
+                <span className="gradient-text">{data.title}</span>
               </h1>
               <p className="text-xl text-gray-600">
-                تميز في التعليم الطبي والبحث العلمي لإعداد جيل من الطبيبات المتميزات
+                {data.subtitle}
               </p>
               <p className="text-lg text-gray-500">
-                Girls Medical College - Excellence in Medical Education and Scientific Research
+                {data.subtitleEn}
               </p>
             </div>
 
             {/* Statistics */}
             <div className="grid grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600">15+</div>
-                <div className="text-sm text-gray-600">أقسام طبية</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600">500+</div>
-                <div className="text-sm text-gray-600">طالبة</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-pink-600">50+</div>
-                <div className="text-sm text-gray-600">عضو هيئة تدريس</div>
-              </div>
+              {data.statistics?.map((stat, index) => (
+                <div key={index} className="text-center">
+                  <div className={`text-3xl font-bold text-${stat.color}-600`}>
+                    {stat.number}{stat.suffix || ''}
+                  </div>
+                  <div className="text-sm text-gray-600">{stat.label}</div>
+                </div>
+              ))}
             </div>
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/about" className="btn-primary text-center">
-                اكتشف المزيد عن الكلية
-              </Link>
-              <Link href="/programs" className="btn-secondary text-center">
-                البرامج الدراسية
-              </Link>
+              {data.primaryButton && (
+                <Link href={data.primaryButton.url || '/about'} className="btn-primary text-center">
+                  {data.primaryButton.text}
+                </Link>
+              )}
+              {data.secondaryButton && (
+                <Link href={data.secondaryButton.url || '/programs'} className="btn-secondary text-center">
+                  {data.secondaryButton.text}
+                </Link>
+              )}
             </div>
           </div>
 
@@ -65,8 +87,8 @@ const Hero = () => {
           <div className="relative">
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden card-shadow">
               <img
-                src="https://egyptcranes.com/wp-content/uploads/2018/03/faculty-of-medicin.jpg"
-                alt="مبنى كلية البنات الطبية"
+                src={data.heroImage?.asset ? urlFor(data.heroImage).width(600).height(500).url() : "https://egyptcranes.com/wp-content/uploads/2018/03/faculty-of-medicin.jpg"}
+                alt={data.heroImage?.alt || "مبنى كلية البنات الطبية"}
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   e.currentTarget.src = "data:image/svg+xml,%3Csvg width='500' height='400' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='18' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eمبنى الكلية%3C/text%3E%3C/svg%3E"
@@ -75,30 +97,34 @@ const Hero = () => {
             </div>
             
             {/* Floating Card - Dean's Welcome */}
-            <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl card-shadow max-w-sm">
-              <div className="flex items-center space-x-reverse space-x-4">
-                <div className="relative w-16 h-16 rounded-full overflow-hidden">
-                  <img
-                    src="https://yaledailynews.com/wp-content/uploads/2025/01/femaleurologist_kb_Courtesy-of-Leslie-Rickey.jpg"
-                    alt="معالي العميدة"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = "data:image/svg+xml,%3Csvg width='64' height='64' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' font-size='12' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eالعميدة%3C/text%3E%3C/svg%3E"
-                    }}
-                  />
+            {data.deanCard?.show && (
+              <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl card-shadow max-w-sm">
+                <div className="flex items-center space-x-reverse space-x-4">
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden">
+                    <img
+                      src={data.deanCard.image?.asset ? urlFor(data.deanCard.image).width(64).height(64).url() : "https://yaledailynews.com/wp-content/uploads/2025/01/femaleurologist_kb_Courtesy-of-Leslie-Rickey.jpg"}
+                      alt={data.deanCard.image?.alt || "معالي العميدة"}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = "data:image/svg+xml,%3Csvg width='64' height='64' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' font-size='12' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eالعميدة%3C/text%3E%3C/svg%3E"
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800">{data.deanCard.title}</h3>
+                    <p className="text-sm text-gray-600">{data.deanCard.subtitle}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-gray-800">معالي العميدة</h3>
-                  <p className="text-sm text-gray-600">كلمة ترحيب</p>
-                </div>
+                <p className="text-sm text-gray-700 mt-3">
+                  {data.deanCard.message}
+                </p>
+                {data.deanCard.link && (
+                  <Link href={data.deanCard.link.url || '/dean-message'} className="text-blue-600 text-sm font-medium hover:underline">
+                    {data.deanCard.link.text}
+                  </Link>
+                )}
               </div>
-              <p className="text-sm text-gray-700 mt-3">
-                أهلاً وسهلاً بكم في كلية البنات الطبية، حيث نسعى لتحقيق التميز في التعليم الطبي...
-              </p>
-              <Link href="/dean-message" className="text-blue-600 text-sm font-medium hover:underline">
-                اقرأ المزيد ←
-              </Link>
-            </div>
+            )}
           </div>
         </div>
       </div>

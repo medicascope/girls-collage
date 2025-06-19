@@ -23,9 +23,7 @@ const Navigation = () => {
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <div className="flex items-center space-x-reverse space-x-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">كب</span>
-            </div>
+            <img src="/logo.jpg" alt="logo" className="w-12 h-12 ml-5" />
             <div>
               <h1 className="text-xl font-bold text-gray-800">كلية البنات الطبية</h1>
               <p className="text-sm text-gray-600">Girls Medical College</p>

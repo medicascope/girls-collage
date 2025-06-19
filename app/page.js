@@ -6,17 +6,27 @@ import LatestNews from '../components/LatestNews'
 import QuickStats from '../components/QuickStats'
 import FeaturedGallery from '../components/FeaturedGallery'
 import DeanMessage from '../components/DeanMessage'
+import { sanityFetch, queries } from '../lib/sanity'
 
-export default function Home() {
+export default async function Home() {
+  // Fetch data from Sanity
+  const [heroData, visionMissionData, newsData, deanMessageData, galleriesData] = await Promise.all([
+    sanityFetch({ query: queries.hero }),
+    sanityFetch({ query: queries.visionMission }),
+    sanityFetch({ query: queries.latestNews }),
+    sanityFetch({ query: queries.deanMessage }),
+    sanityFetch({ query: queries.featuredGalleries })
+  ])
+
   return (
     <main>
       <Navigation />
-      <Hero />
-      <VisionMission />
+      <Hero heroData={heroData} />
+      <VisionMission visionMissionData={visionMissionData} />
       <QuickStats />
-      <DeanMessage />
-      <LatestNews />
-      <FeaturedGallery />
+      <DeanMessage deanMessageData={deanMessageData} />
+      <LatestNews newsData={newsData} />
+      <FeaturedGallery galleriesData={galleriesData} />
       <Footer />
     </main>
   )
