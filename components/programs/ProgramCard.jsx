@@ -103,7 +103,7 @@ export default function ProgramCard({ program }) {
               <div className="grid grid-cols-1 gap-3">
                 {program.objectives.map((objective, index) => (
                   <div key={index} className="flex items-start space-x-3 space-x-reverse">
-                    <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
+                    <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-bold mt-0.5 ml-2 mr-0">
                       {index + 1}
                     </div>
                     <p className="text-gray-600 flex-1">{objective}</p>
