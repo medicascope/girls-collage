@@ -10,6 +10,7 @@ import staff from './documents/staff'
 import hero from './documents/hero'
 import visionMission from './documents/visionMission'
 import deanMessage from './documents/deanMessage'
+import aboutPage from './documents/aboutPage'
 import gallery from './documents/gallery'
 
 // Object types
@@ -35,6 +36,7 @@ export const schemaTypes = [
   hero,
   visionMission,
   deanMessage,
+  aboutPage,
   gallery,
   
   // Object types

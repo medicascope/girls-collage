@@ -7,16 +7,16 @@
   --section-container-padding-lg: 2rem;
   
   --gradient-text-from: #2563eb;
-  --gradient-text-via: #9333ea;
-  --gradient-text-to: #ec4899;
+  --gradient-text-via: #dc2626;
+  --gradient-text-to: #e11d48;
   
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   
   --btn-primary-from: #2563eb;
-  --btn-primary-to: #9333ea;
+  --btn-primary-to: #dc2626;
   --btn-primary-hover-from: #1d4ed8;
-  --btn-primary-hover-to: #7c3aed;
+  --btn-primary-hover-to: #b91c1c;
   
   --btn-secondary-bg: #ffffff;
   --btn-secondary-text: #2563eb;

@@ -7,7 +7,7 @@ export default defineConfig({
   name: 'default',
   title: 'Girls Medical College',
 
-  projectId: 'your-project-id', // You'll need to get this from sanity.io
+  projectId: 'f8leamg6', // You'll need to get this from sanity.io
   dataset: 'production',
 
   plugins: [structureTool(), visionTool()],

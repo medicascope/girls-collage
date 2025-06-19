@@ -40,7 +40,7 @@ export default function ProgramStats({ programs }) {
       <div className="section-container">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-6">
-            <span className="gradient-text">إحصائيات البرامج الأكاديمية</span>
+            <span className="gradient-black">إحصائيات البرامج الأكاديمية</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             نظرة شاملة على البرامج الأكاديمية المتنوعة وأعداد الطالبات المسجلات في كلية البنات الطبية
@@ -92,12 +92,15 @@ export default function ProgramStats({ programs }) {
                   <div className="w-full bg-gray-200 rounded-full h-3">
                     <div 
                       className="bg-gradient-to-r from-blue-600 to-purple-600 h-3 rounded-full transition-all duration-500" 
-                      style={{width: `${(program.currentStudents / program.capacity) * 100}%`}}
+                      style={{width: `${Math.min((program.currentStudents / program.capacity) * 100, 100)}%`}}
                     ></div>
                   </div>
                   <div className="flex justify-between text-xs text-gray-500 mt-1">
                     <span>{program.level}</span>
-                    <span>{Math.round((program.currentStudents / program.capacity) * 100)}% ممتلئ</span>
+                    <span className={program.currentStudents > program.capacity ? 'text-red-600 font-medium' : ''}>
+                      {Math.round((program.currentStudents / program.capacity) * 100)}% 
+                      {program.currentStudents > program.capacity ? ' (تجاوز السعة)' : ' ممتلئ'}
+                    </span>
                   </div>
                 </div>
               ))}

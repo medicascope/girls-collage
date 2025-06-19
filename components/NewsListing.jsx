@@ -3,7 +3,33 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 
-const NewsListing = () => {
+import { urlFor } from '../lib/sanity'
+
+const NewsListing = ({ newsData }) => {
+  // Fallback news data if Sanity data is not available
+  const fallbackNews = [
+    {
+      id: 1,
+      title: 'افتتاح معمل المحاكاة الطبية المتقدم',
+      excerpt: 'تم افتتاح معمل جديد للمحاكاة الطبية مزود بأحدث التقنيات العالمية لتدريب الطالبات على أفضل المعايير الطبية.',
+      image: '/images/news/simulation-lab.jpg',
+      date: '2024-01-15',
+      category: 'تطوير التعليم',
+      isFeature: true
+    },
+    {
+      id: 2,
+      title: 'توقيع اتفاقية تعاون مع جامعة هارفارد الطبية',
+      excerpt: 'وقعت الكلية اتفاقية شراكة استراتيجية مع جامعة هارفارد لتبادل الخبرات والأبحاث العلمية.',
+      image: '/images/news/harvard-agreement.jpg',
+      date: '2024-01-10',
+      category: 'شراكات دولية',
+      isFeature: false
+    }
+  ]
+  
+  // Use Sanity data if available, otherwise use fallback
+  const newsArticles = newsData || fallbackNews
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('الكل')
   const [currentPage, setCurrentPage] = useState(1)

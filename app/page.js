@@ -10,24 +10,25 @@ import { sanityFetch, queries } from '../lib/sanity'
 
 export default async function Home() {
   // Fetch data from Sanity
-  const [heroData, visionMissionData, newsData, deanMessageData, galleriesData] = await Promise.all([
+  const [heroData, visionMissionData, newsData, deanMessageData, galleriesData, siteSettings] = await Promise.all([
     sanityFetch({ query: queries.hero }),
     sanityFetch({ query: queries.visionMission }),
     sanityFetch({ query: queries.latestNews }),
     sanityFetch({ query: queries.deanMessage }),
-    sanityFetch({ query: queries.featuredGalleries })
+    sanityFetch({ query: queries.featuredGalleries }),
+    sanityFetch({ query: queries.siteSettings })
   ])
 
   return (
     <main>
-      <Navigation />
+      <Navigation siteSettings={siteSettings} />
       <Hero heroData={heroData} />
       <VisionMission visionMissionData={visionMissionData} />
-      <QuickStats />
+      <QuickStats heroData={heroData} />
       <DeanMessage deanMessageData={deanMessageData} />
       <LatestNews newsData={newsData} />
       <FeaturedGallery galleriesData={galleriesData} />
-      <Footer />
+      <Footer siteSettings={siteSettings} />
     </main>
   )
 }

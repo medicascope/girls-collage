@@ -2,6 +2,7 @@ import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import HospitalCard from '../../components/hospitals/HospitalCard'
 import HospitalStats from '../../components/hospitals/HospitalStats'
+import { sanityFetch, queries } from '../../lib/sanity'
 
 export const metadata = {
   title: 'مستشفيات الكلية | كلية البنات الطبية',
@@ -113,10 +114,18 @@ const hospitals = [
   }
 ]
 
-export default function HospitalsPage() {
+export default async function HospitalsPage() {
+  const [hospitalsData, siteSettings] = await Promise.all([
+    sanityFetch({ query: queries.hospitals }),
+    sanityFetch({ query: queries.siteSettings })
+  ])
+  
+  // Use Sanity data if available, otherwise fallback to hardcoded hospitals
+  const allHospitals = hospitalsData?.length > 0 ? hospitalsData : hospitals
+
   return (
     <main>
-      <Navigation />
+      <Navigation siteSettings={siteSettings} />
       
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -133,14 +142,14 @@ export default function HospitalsPage() {
         </div>
       </section>
 
-      <HospitalStats hospitals={hospitals} />
+      <HospitalStats hospitals={allHospitals} />
       
       {/* Hospitals Grid */}
       <section className="py-20 bg-white">
         <div className="section-container">
           <div className="space-y-12">
-            {hospitals.map((hospital) => (
-              <HospitalCard key={hospital.id} hospital={hospital} />
+            {allHospitals.map((hospital, index) => (
+              <HospitalCard key={hospital._id || hospital.id || index} hospital={hospital} />
             ))}
           </div>
         </div>
@@ -191,7 +200,7 @@ export default function HospitalsPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer siteSettings={siteSettings} />
     </main>
   )
 } 

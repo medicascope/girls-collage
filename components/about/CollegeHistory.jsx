@@ -1,7 +1,9 @@
 import Image from 'next/image'
+import PortableText from '../PortableText'
 
-const CollegeHistory = () => {
-  const milestones = [
+const CollegeHistory = ({ aboutData }) => {
+  // Fallback milestones if no Sanity data
+  const fallbackMilestones = [
     {
       year: '2005',
       title: 'تأسيس الكلية',
@@ -39,6 +41,31 @@ const CollegeHistory = () => {
     }
   ]
 
+  // Fallback founding principles
+  const fallbackPrinciples = [
+    {
+      title: 'التعليم المتميز',
+      description: 'تقديم تعليم طبي عالي الجودة وفق أحدث المعايير الدولية'
+    },
+    {
+      title: 'البحث العلمي',
+      description: 'تطوير البحث العلمي والابتكار في المجال الطبي'
+    },
+    {
+      title: 'خدمة المجتمع',
+      description: 'المساهمة في تطوير الخدمات الصحية المجتمعية'
+    },
+    {
+      title: 'القيم الأخلاقية',
+      description: 'غرس القيم الأخلاقية والمهنية في نفوس الطالبات'
+    }
+  ]
+
+  // Use Sanity data or fallback
+  const historyTitle = aboutData?.historyTitle || 'نشأة الكلية'
+  const milestones = aboutData?.milestones?.length > 0 ? aboutData.milestones : fallbackMilestones
+  const foundingPrinciples = aboutData?.foundingPrinciples?.length > 0 ? aboutData.foundingPrinciples : fallbackPrinciples
+
   return (
     <section className="py-20 bg-white">
       <div className="section-container">
@@ -46,72 +73,53 @@ const CollegeHistory = () => {
           {/* Content Side */}
           <div>
             <h2 className="text-4xl lg:text-5xl font-bold mb-8">
-              <span className="gradient-text">نشأة الكلية</span>
+              <span className="gradient-text">{historyTitle}</span>
             </h2>
             
             <div className="space-y-6 text-gray-700 leading-relaxed">
-              <p className="text-lg">
-                تأسست كلية البنات الطبية في عام 2005 انطلاقاً من رؤية طموحة لإعداد جيل من الطبيبات 
-                المتميزات القادرات على تقديم أفضل مستويات الرعاية الصحية للمجتمع، وخاصة في مجال 
-                الرعاية الصحية النسائية والأطفال.
-              </p>
-              
-              <p>
-                جاءت فكرة إنشاء الكلية استجابة لحاجة ملحة في المجتمع لوجود كوادر طبية نسائية مؤهلة 
-                ومتخصصة، حيث كانت هناك فجوة واضحة في هذا المجال. وقد حرصت الكلية منذ البداية على 
-                اتباع أعلى المعايير الأكاديمية والتعليمية.
-              </p>
-              
-              <p>
-                اليوم، وبعد أكثر من 18 عاماً من التميز والعطاء، تقف كلية البنات الطبية كصرح 
-                أكاديمي مرموق، خرّجت أكثر من 2,500 طبيبة متخصصة، وأصبحت مرجعاً في التعليم 
-                الطبي والبحث العلمي على مستوى المنطقة.
-              </p>
+              {aboutData?.historyContent ? (
+                <PortableText value={aboutData.historyContent} />
+              ) : (
+                <>
+                  <p className="text-lg">
+                    تأسست كلية البنات الطبية في عام 2005 انطلاقاً من رؤية طموحة لإعداد جيل من الطبيبات 
+                    المتميزات القادرات على تقديم أفضل مستويات الرعاية الصحية للمجتمع، وخاصة في مجال 
+                    الرعاية الصحية النسائية والأطفال.
+                  </p>
+                  
+                  <p>
+                    جاءت فكرة إنشاء الكلية استجابة لحاجة ملحة في المجتمع لوجود كوادر طبية نسائية مؤهلة 
+                    ومتخصصة، حيث كانت هناك فجوة واضحة في هذا المجال. وقد حرصت الكلية منذ البداية على 
+                    اتباع أعلى المعايير الأكاديمية والتعليمية.
+                  </p>
+                  
+                  <p>
+                    اليوم، وبعد أكثر من 18 عاماً من التميز والعطاء، تقف كلية البنات الطبية كصرح 
+                    أكاديمي مرموق، خرّجت أكثر من 2,500 طبيبة متخصصة، وأصبحت مرجعاً في التعليم 
+                    الطبي والبحث العلمي على مستوى المنطقة.
+                  </p>
+                </>
+              )}
             </div>
 
             {/* Founding Principles */}
             <div className="mt-12">
               <h3 className="text-2xl font-bold text-gray-800 mb-6">المبادئ التأسيسية</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex items-start space-x-reverse space-x-3">
-                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-sm font-bold">1</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-1">التعليم المتميز</h4>
-                    <p className="text-gray-600 text-sm">تقديم تعليم طبي عالي الجودة وفق أحدث المعايير الدولية</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-reverse space-x-3">
-                  <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-sm font-bold">2</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-1">البحث العلمي</h4>
-                    <p className="text-gray-600 text-sm">تطوير البحث العلمي والابتكار في المجال الطبي</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-reverse space-x-3">
-                  <div className="w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-sm font-bold">3</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-1">خدمة المجتمع</h4>
-                    <p className="text-gray-600 text-sm">المساهمة في تطوير الخدمات الصحية المجتمعية</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-reverse space-x-3">
-                  <div className="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <span className="text-white text-sm font-bold">4</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-1">القيم الأخلاقية</h4>
-                    <p className="text-gray-600 text-sm">غرس القيم الأخلاقية والمهنية في نفوس الطالبات</p>
-                  </div>
-                </div>
+                {foundingPrinciples.map((principle, index) => {
+                  const colors = ['bg-blue-600', 'bg-purple-600', 'bg-pink-600', 'bg-green-600']
+                  return (
+                    <div key={index} className="flex items-start space-x-reverse space-x-3">
+                      <div className={`w-8 h-8 ${colors[index % colors.length]} rounded-full flex items-center justify-center flex-shrink-0 mt-1`}>
+                        <span className="text-white text-sm font-bold">{index + 1}</span>
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-800 mb-1">{principle.title}</h4>
+                        <p className="text-gray-600 text-sm">{principle.description}</p>
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </div>

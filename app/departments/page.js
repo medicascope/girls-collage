@@ -2,13 +2,14 @@ import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import DepartmentCard from '../../components/departments/DepartmentCard'
 import DepartmentStats from '../../components/departments/DepartmentStats'
+import { sanityFetch, queries } from '../../lib/sanity'
 
 export const metadata = {
   title: 'أقسام الكلية | كلية البنات الطبية',
   description: 'تعرف على جميع أقسام كلية البنات الطبية وهيكلها التنظيمي ورؤية ورسالة كل قسم وأعضاء هيئة التدريس',
 }
 
-const departments = [
+const fallbackDepartments = [
   {
     id: 1,
     name: 'قسم الطب الباطني',
@@ -89,10 +90,18 @@ const departments = [
   }
 ]
 
-export default function DepartmentsPage() {
+export default async function DepartmentsPage() {
+  // Fetch data from Sanity
+  const [departmentsData, siteSettings] = await Promise.all([
+    sanityFetch({ query: queries.allDepartments }),
+    sanityFetch({ query: queries.siteSettings })
+  ])
+  
+  // Use Sanity data if available, otherwise fallback
+  const departments = departmentsData || fallbackDepartments
   return (
     <main>
-      <Navigation />
+      <Navigation siteSettings={siteSettings} />
       
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -115,8 +124,8 @@ export default function DepartmentsPage() {
       <section className="py-20 bg-white">
         <div className="section-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {departments.map((department) => (
-              <DepartmentCard key={department.id} department={department} />
+            {departments.map((department, index) => (
+              <DepartmentCard key={department._id || department.id || index} department={department} />
             ))}
           </div>
         </div>
@@ -132,7 +141,7 @@ export default function DepartmentsPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold mb-2">15</div>
+              <div className="text-4xl font-bold mb-2">{departments?.length || 15}</div>
               <div className="opacity-90">قسم طبي متخصص</div>
             </div>
             <div className="text-center">
@@ -151,7 +160,7 @@ export default function DepartmentsPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer siteSettings={siteSettings} />
     </main>
   )
 } 

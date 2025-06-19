@@ -1,5 +1,6 @@
 import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
+import { sanityFetch, queries } from '../../lib/sanity'
 import ProgramCard from '../../components/programs/ProgramCard'
 import AdmissionRequirements from '../../components/programs/AdmissionRequirements'
 import ProgramStats from '../../components/programs/ProgramStats'
@@ -247,13 +248,21 @@ const programs = [
   }
 ]
 
-export default function ProgramsPage() {
+export default async function ProgramsPage() {
+  const [programsData, siteSettings] = await Promise.all([
+    sanityFetch({ query: queries.programs }),
+    sanityFetch({ query: queries.siteSettings })
+  ])
+  
+  // Use Sanity data if available, otherwise fallback to hardcoded programs
+  const allPrograms = programsData?.length > 0 ? programsData : programs
+
   return (
     <main>
-      <Navigation />
+      <Navigation siteSettings={siteSettings} />
       
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-50">
         <div className="section-container">
           <div className="text-center">
             <h1 className="text-5xl lg:text-6xl font-bold mb-6">
@@ -267,14 +276,14 @@ export default function ProgramsPage() {
         </div>
       </section>
 
-      <ProgramStats programs={programs} />
+      <ProgramStats programs={allPrograms} />
       
       {/* Programs Grid */}
       <section className="py-20 bg-white">
         <div className="section-container">
           <div className="space-y-16">
-            {programs.map((program) => (
-              <ProgramCard key={program.id} program={program} />
+            {allPrograms.map((program, index) => (
+              <ProgramCard key={program._id || program.id || index} program={program} />
             ))}
           </div>
         </div>
@@ -292,39 +301,39 @@ export default function ProgramsPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white bg-opacity-20 p-8 rounded-xl">
-              <div className="w-16 h-16 bg-white bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-black bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold mb-2">التقديم الإلكتروني</h3>
-              <p className="opacity-90">قدمي طلبك عبر البوابة الإلكترونية</p>
+              <h3 className="text-2xl font-bold mb-2 text-black">التقديم الإلكتروني</h3>
+              <p className="opacity-90 text-black">قدمي طلبك عبر البوابة الإلكترونية</p>
               <button className="mt-4 bg-white text-purple-600 px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-colors">
                 ابدئي التقديم
               </button>
             </div>
 
             <div className="bg-white bg-opacity-20 p-8 rounded-xl">
-              <div className="w-16 h-16 bg-white bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-black bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold mb-2">الاستفسارات</h3>
-              <p className="opacity-90">تواصلي معنا للحصول على معلومات إضافية</p>
+              <h3 className="text-2xl font-bold mb-2 text-black">الاستفسارات</h3>
+              <p className="opacity-90 text-black">تواصلي معنا للحصول على معلومات إضافية</p>
               <button className="mt-4 bg-white text-purple-600 px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-colors">
                 اتصلي بنا
               </button>
             </div>
 
             <div className="bg-white bg-opacity-20 p-8 rounded-xl">
-              <div className="w-16 h-16 bg-white bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-black bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold mb-2">زيارة الكلية</h3>
-              <p className="opacity-90">احجزي موعداً لزيارة الكلية والتعرف عليها</p>
+              <h3 className="text-2xl font-bold mb-2 text-black">زيارة الكلية</h3>
+              <p className="opacity-90 text-black">احجزي موعداً لزيارة الكلية والتعرف عليها</p>
               <button className="mt-4 bg-white text-purple-600 px-6 py-2 rounded-lg font-bold hover:bg-opacity-90 transition-colors">
                 احجزي زيارة
               </button>
@@ -333,7 +342,7 @@ export default function ProgramsPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer siteSettings={siteSettings} />
     </main>
   )
 } 

@@ -3,16 +3,18 @@ import Footer from '../../components/Footer'
 import ContactForm from '../../components/contact/ContactForm'
 import ContactInfo from '../../components/contact/ContactInfo'
 import LocationMap from '../../components/contact/LocationMap'
+import { sanityFetch, queries } from '../../lib/sanity'
 
 export const metadata = {
   title: 'اتصل بنا | كلية البنات الطبية',
   description: 'تواصل مع كلية البنات الطبية - معلومات الاتصال وعنوان الكلية ونموذج التواصل',
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const siteSettings = await sanityFetch({ query: queries.siteSettings })
   return (
     <main>
-      <Navigation />
+      <Navigation siteSettings={siteSettings} />
       
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -77,7 +79,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer siteSettings={siteSettings} />
     </main>
   )
 } 

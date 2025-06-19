@@ -29,13 +29,13 @@ const Hero = ({ heroData }) => {
   return (
     <section className="relative min-h-screen flex items-center">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-red-50">
         <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.3) 1px, transparent 0)`,
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(37, 99, 235, 0.25) 1px, transparent 0)`,
           backgroundSize: '20px 20px'
         }}></div>
         <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: `linear-gradient(90deg, rgba(147, 51, 234, 0.1) 1px, transparent 1px), linear-gradient(rgba(147, 51, 234, 0.1) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(90deg, rgba(220, 38, 38, 0.08) 1px, transparent 1px), linear-gradient(rgba(220, 38, 38, 0.08) 1px, transparent 1px)`,
           backgroundSize: '40px 40px'
         }}></div>
       </div>
@@ -62,9 +62,9 @@ const Hero = ({ heroData }) => {
                 <div key={index} className="text-center">
                   <div className={`text-3xl font-bold text-${stat.color}-600`}>
                     {stat.number}{stat.suffix || ''}
-                  </div>
+              </div>
                   <div className="text-sm text-gray-600">{stat.label}</div>
-                </div>
+              </div>
               ))}
             </div>
 
@@ -73,12 +73,12 @@ const Hero = ({ heroData }) => {
               {data.primaryButton && (
                 <Link href={data.primaryButton.url || '/about'} className="btn-primary text-center">
                   {data.primaryButton.text}
-                </Link>
+              </Link>
               )}
               {data.secondaryButton && (
                 <Link href={data.secondaryButton.url || '/programs'} className="btn-secondary text-center">
                   {data.secondaryButton.text}
-                </Link>
+              </Link>
               )}
             </div>
           </div>
@@ -98,19 +98,19 @@ const Hero = ({ heroData }) => {
             
             {/* Floating Card - Dean's Welcome */}
             {data.deanCard?.show && (
-              <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl card-shadow max-w-sm">
-                <div className="flex items-center space-x-reverse space-x-4">
-                  <div className="relative w-16 h-16 rounded-full overflow-hidden">
-                    <img
+            <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl card-shadow max-w-sm">
+              <div className="flex items-center space-x-reverse space-x-4">
+                <div className="relative w-16 h-16 rounded-full overflow-hidden">
+                  <img
                       src={data.deanCard.image?.asset ? urlFor(data.deanCard.image).width(64).height(64).url() : "https://yaledailynews.com/wp-content/uploads/2025/01/femaleurologist_kb_Courtesy-of-Leslie-Rickey.jpg"}
                       alt={data.deanCard.image?.alt || "معالي العميدة"}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = "data:image/svg+xml,%3Csvg width='64' height='64' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' font-size='12' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eالعميدة%3C/text%3E%3C/svg%3E"
-                      }}
-                    />
-                  </div>
-                  <div>
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = "data:image/svg+xml,%3Csvg width='64' height='64' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23e2e8f0'/%3E%3Ctext x='50%25' y='50%25' font-size='12' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eالعميدة%3C/text%3E%3C/svg%3E"
+                    }}
+                  />
+                </div>
+                <div>
                     <h3 className="font-semibold text-gray-800">{data.deanCard.title}</h3>
                     <p className="text-sm text-gray-600">{data.deanCard.subtitle}</p>
                   </div>

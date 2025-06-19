@@ -25,10 +25,10 @@ export default function ProgramCard({ program }) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-3 space-x-reverse mb-4">
-              <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium">
+              <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium text-black ml-2">
                 {program.level}
               </span>
-              <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium">
+              <span className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium text-black">
                 {program.duration}
               </span>
             </div>

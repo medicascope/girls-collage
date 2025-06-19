@@ -1,5 +1,5 @@
-const StrategicGoals = () => {
-  const goals = [
+const StrategicGoals = ({ aboutData }) => {
+  const fallbackGoals = [
     {
       icon: (
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,23 +62,38 @@ const StrategicGoals = () => {
     }
   ]
 
+  // Default icon for goals
+  const defaultIcon = (
+    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+    </svg>
+  )
+
+  // Use Sanity data or fallback
+  const goals = aboutData?.strategicGoals?.length > 0 
+    ? aboutData.strategicGoals.map((goal, index) => ({
+        ...goal,
+        icon: fallbackGoals[index]?.icon || defaultIcon
+      }))
+    : fallbackGoals
+
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
       <div className="section-container">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-            <span className="gradient-text">الغايات والأهداف الاستراتيجية</span>
+            <span className="gradient-text">{aboutData?.strategicGoalsTitle || 'الغايات والأهداف الاستراتيجية'}</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-            نسعى لتحقيق أهداف استراتيجية طموحة تجعل من كلية البنات الطبية رائدة في التعليم الطبي والبحث العلمي وخدمة المجتمع
+            {aboutData?.strategicGoalsSubtitle || 'نسعى لتحقيق أهداف استراتيجية طموحة تجعل من كلية البنات الطبية رائدة في التعليم الطبي والبحث العلمي وخدمة المجتمع'}
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {goals.map((goal, index) => (
             <div key={index} className="bg-white p-8 rounded-2xl card-shadow">
-              <div className="flex items-start space-x-reverse space-x-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white flex-shrink-0">
+              <div className="flex items-center space-x-reverse space-x-4 mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white flex-shrink-0 ml-5 mr-0">
                   {goal.icon}
                 </div>
                 <div className="flex-1">
@@ -102,44 +117,6 @@ const StrategicGoals = () => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Success Metrics */}
-        <div className="mt-20">
-          <h3 className="text-3xl font-bold text-center text-gray-800 mb-12">مؤشرات النجاح</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white text-2xl font-bold">95%</span>
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-2">معدل التوظيف</h4>
-              <p className="text-gray-600 text-sm">من الخريجات يحصلن على وظائف خلال 6 أشهر</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white text-2xl font-bold">4.8</span>
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-2">تقييم الجودة</h4>
-              <p className="text-gray-600 text-sm">من 5 نقاط في تقييم جودة التعليم</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-pink-600 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white text-2xl font-bold">150+</span>
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-2">البحوث السنوية</h4>
-              <p className="text-gray-600 text-sm">بحث علمي منشور سنوياً</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-green-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-white text-2xl font-bold">25+</span>
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-2">الشراكات</h4>
-              <p className="text-gray-600 text-sm">شراكة محلية ودولية فعالة</p>
-            </div>
-          </div>
         </div>
       </div>
     </section>

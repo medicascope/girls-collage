@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react'
 
-const QuickStats = () => {
+const QuickStats = ({ heroData }) => {
   const [counts, setCounts] = useState({ students: 0, faculty: 0, departments: 0, hospitals: 0 })
 
-  const stats = [
+  // Use stats from heroData if available, otherwise fallback
+  const fallbackStats = [
     { 
       key: 'students', 
       target: 1200, 
@@ -52,6 +53,17 @@ const QuickStats = () => {
     }
   ]
 
+  // Transform Sanity statistics to match our format
+  const stats = heroData?.statistics?.length > 0 
+    ? heroData.statistics.map((stat, index) => ({
+        key: stat.label?.toLowerCase().replace(/\s+/g, '_') || `stat_${index}`,
+        target: stat.value || fallbackStats[index]?.target || 100,
+        label: stat.label || fallbackStats[index]?.label || 'إحصائية',
+        icon: fallbackStats[index]?.icon || fallbackStats[0].icon,
+        gradient: fallbackStats[index]?.gradient || 'from-blue-600 to-purple-600'
+      }))
+    : fallbackStats
+
   useEffect(() => {
     const animateCounters = () => {
       stats.forEach(stat => {
@@ -76,10 +88,10 @@ const QuickStats = () => {
       <div className="section-container">
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-            <span className="gradient-text">الكلية في أرقام</span>
+            <span className="text-black">{heroData?.statisticsTitle || 'الكلية في أرقام'}</span>
           </h2>
           <p className="text-xl text-gray-600">
-            نفتخر بما حققناه من إنجازات في مسيرتنا التعليمية والبحثية
+            {heroData?.statisticsSubtitle || 'نفتخر بما حققناه من إنجازات في مسيرتنا التعليمية والبحثية'}
           </p>
         </div>
 
@@ -103,20 +115,22 @@ const QuickStats = () => {
         </div>
 
         {/* Additional achievements */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white p-6 rounded-xl card-shadow text-center">
-            <div className="text-3xl font-bold text-blue-600 mb-2">98%</div>
-            <div className="text-gray-600">معدل نجاح الطالبات</div>
+        {heroData?.achievements && heroData.achievements.length > 0 && (
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+            {heroData.achievements.map((achievement, index) => (
+              <div key={index} className="bg-white p-6 rounded-xl card-shadow text-center">
+                <div className={`text-3xl font-bold mb-2 ${
+                  index === 0 ? 'text-blue-600' : 
+                  index === 1 ? 'text-purple-600' : 
+                  'text-pink-600'
+                }`}>
+                  {achievement.value}{achievement.suffix}
+                </div>
+                <div className="text-gray-600">{achievement.label}</div>
+              </div>
+            ))}
           </div>
-          <div className="bg-white p-6 rounded-xl card-shadow text-center">
-            <div className="text-3xl font-bold text-purple-600 mb-2">250+</div>
-            <div className="text-gray-600">بحث علمي منشور</div>
-          </div>
-          <div className="bg-white p-6 rounded-xl card-shadow text-center">
-            <div className="text-3xl font-bold text-pink-600 mb-2">95%</div>
-            <div className="text-gray-600">رضا الطالبات</div>
-          </div>
-        </div>
+        )}
       </div>
     </section>
   )

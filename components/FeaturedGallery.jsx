@@ -2,9 +2,11 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { urlFor } from '../lib/sanity'
 
-const FeaturedGallery = () => {
-  const galleryItems = [
+const FeaturedGallery = ({ galleriesData }) => {
+  // Fallback gallery data if Sanity data is not available
+  const fallbackGallery = [
     {
       id: 1,
       title: 'معالي العميدة مع فضيلة الإمام ودكتور محمود صديق',
@@ -49,6 +51,9 @@ const FeaturedGallery = () => {
     }
   ]
 
+  // Use Sanity data if available, otherwise fallback
+  const galleryItems = galleriesData || fallbackGallery
+
   return (
     <section className="py-20 bg-white">
       <div className="section-container">
@@ -62,14 +67,15 @@ const FeaturedGallery = () => {
         </div>
 
         {/* Featured Image */}
+        {galleryItems.length > 0 && (
         <div className="mb-12">
           <div className="relative h-96 lg:h-[500px] rounded-2xl overflow-hidden card-shadow">
             <img
-              src="/images/gallery/dean-imam-meeting.jpg"
-              alt="معالي العميدة مع فضيلة الإمام ودكتور محمود صديق"
+                src={galleryItems[0].images?.[0]?.asset ? urlFor(galleryItems[0].images[0]).width(800).height(500).url() : galleryItems[0].image || "data:image/svg+xml,%3Csvg width='800' height='500' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='20' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eالصورة المميزة%3C/text%3E%3C/svg%3E"}
+                alt={galleryItems[0].images?.[0]?.alt || galleryItems[0].title}
               className="w-full h-full object-cover"
               onError={(e) => {
-                e.currentTarget.src = "data:image/svg+xml,%3Csvg width='800' height='500' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='20' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eمعالي العميدة مع فضيلة الإمام ودكتور محمود صديق%3C/text%3E%3C/svg%3E"
+                  e.currentTarget.src = "data:image/svg+xml,%3Csvg width='800' height='500' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='20' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eالصورة المميزة%3C/text%3E%3C/svg%3E"
               }}
             />
             <div className="absolute inset-0 bg-black bg-opacity-30 flex items-end">
@@ -78,24 +84,25 @@ const FeaturedGallery = () => {
                   الصورة المميزة
                 </span>
                 <h3 className="text-3xl font-bold mb-2">
-                  معالي العميدة مع فضيلة الإمام ودكتور محمود صديق
+                    {galleryItems[0].title}
                 </h3>
                 <p className="text-lg opacity-90">
-                  لقاء مهم مع الضيوف المكرمين لمناقشة التطوير الأكاديمي والتعاون العلمي
+                    {galleryItems[0].description}
                 </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {galleryItems.slice(1).map((item) => (
-            <div key={item.id} className="group cursor-pointer">
+          {galleryItems.slice(1).map((item, index) => (
+            <Link key={item._id || item.id || index} href={`/gallery/${item.slug?.current || item.id}`} className="group cursor-pointer">
               <div className="relative h-64 rounded-xl overflow-hidden card-shadow mb-4">
                 <img
-                  src={item.image}
-                  alt={item.title}
+                  src={item.images?.[0]?.asset ? urlFor(item.images[0]).width(400).height(300).url() : item.image || "data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='14' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eصورة الفعالية%3C/text%3E%3C/svg%3E"}
+                  alt={item.images?.[0]?.alt || item.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {
                     e.currentTarget.src = "data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='14' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eصورة الفعالية%3C/text%3E%3C/svg%3E"
@@ -123,7 +130,7 @@ const FeaturedGallery = () => {
                   {item.description}
                 </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

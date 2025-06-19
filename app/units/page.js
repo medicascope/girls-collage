@@ -2,6 +2,7 @@ import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import UnitCard from '../../components/units/UnitCard'
 import UnitsOverview from '../../components/units/UnitsOverview'
+import { sanityFetch, queries } from '../../lib/sanity'
 
 export const metadata = {
   title: 'وحدات الكلية | كلية البنات الطبية',
@@ -312,10 +313,18 @@ const units = [
   }
 ]
 
-export default function UnitsPage() {
+export default async function UnitsPage() {
+  const [unitsData, siteSettings] = await Promise.all([
+    sanityFetch({ query: queries.units }),
+    sanityFetch({ query: queries.siteSettings })
+  ])
+  
+  // Use Sanity data if available, otherwise fallback to hardcoded units
+  const allUnits = unitsData?.length > 0 ? unitsData : units
+
   return (
     <main>
-      <Navigation />
+      <Navigation siteSettings={siteSettings} />
       
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -332,14 +341,14 @@ export default function UnitsPage() {
         </div>
       </section>
 
-      <UnitsOverview units={units} />
+      <UnitsOverview units={allUnits} />
       
       {/* Units Grid */}
       <section className="py-20 bg-white">
         <div className="section-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {units.map((unit) => (
-              <UnitCard key={unit.id} unit={unit} />
+            {allUnits.map((unit, index) => (
+              <UnitCard key={unit._id || unit.id || index} unit={unit} />
             ))}
           </div>
         </div>
@@ -356,42 +365,42 @@ export default function UnitsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white bg-opacity-20 p-8 rounded-xl">
               <div className="w-16 h-16 bg-white bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8" fill="#000" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold mb-2">الهاتف</h3>
-              <p className="text-xl">+966 11 123 4560</p>
-              <p className="opacity-80 mt-2">الرقم الموحد للوحدات</p>
+              <h3 className="text-2xl font-bold mb-2 text-black">الهاتف</h3>
+              <p className="text-xl text-black">+966 11 123 4560</p>
+              <p className="opacity-80 mt-2 text-black">الرقم الموحد للوحدات</p>
             </div>
 
             <div className="bg-white bg-opacity-20 p-8 rounded-xl">
               <div className="w-16 h-16 bg-white bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8" fill="#000" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold mb-2">البريد الإلكتروني</h3>
-              <p className="text-xl">units@girlsmedcollege.edu</p>
-              <p className="opacity-80 mt-2">للاستفسارات العامة</p>
+              <h3 className="text-2xl font-bold mb-2 text-black">البريد الإلكتروني</h3>
+              <p className="text-xl text-black">units@girlsmedcollege.edu</p>
+              <p className="opacity-80 mt-2 text-black">للاستفسارات العامة</p>
             </div>
 
             <div className="bg-white bg-opacity-20 p-8 rounded-xl">
               <div className="w-16 h-16 bg-white bg-opacity-30 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8" fill="#000" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold mb-2">الموقع</h3>
-              <p className="text-xl">مجمع مباني الكلية</p>
-              <p className="opacity-80 mt-2">الرياض - المملكة العربية السعودية</p>
+              <h3 className="text-2xl font-bold mb-2 text-black">الموقع</h3>
+              <p className="text-xl text-black">مجمع مباني الكلية</p>
+              <p className="opacity-80 mt-2 text-black">الرياض - المملكة العربية السعودية</p>
             </div>
           </div>
         </div>
       </section>
 
-      <Footer />
+      <Footer siteSettings={siteSettings} />
     </main>
   )
 } 

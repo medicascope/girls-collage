@@ -86,7 +86,7 @@ export default function AdmissionRequirements() {
               className={`bg-gradient-to-br ${req.bgColor} p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300`}
             >
               <div className="flex items-center space-x-4 space-x-reverse mb-6">
-                <div className={`w-16 h-16 bg-gradient-to-r ${req.color} rounded-full flex items-center justify-center text-2xl`}>
+                <div className={`w-16 h-16 bg-gradient-to-r ${req.color} rounded-full flex items-center justify-center text-2xl ml-5 mr-0`}>
                   {req.icon}
                 </div>
                 <h3 className="text-2xl font-bold text-gray-800">{req.title}</h3>
@@ -95,7 +95,7 @@ export default function AdmissionRequirements() {
               <div className="space-y-3">
                 {req.items.map((item, itemIndex) => (
                   <div key={itemIndex} className="flex items-start space-x-3 space-x-reverse">
-                    <div className={`w-5 h-5 bg-gradient-to-r ${req.color} rounded-full flex items-center justify-center mt-0.5`}>
+                    <div className={`w-5 h-5 bg-gradient-to-r ${req.color} rounded-full flex items-center justify-center mt-0.5 ml-2 mr-0`}>
                       <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                       </svg>
