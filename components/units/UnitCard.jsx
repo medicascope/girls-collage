@@ -48,9 +48,6 @@ export default function UnitCard({ unit }) {
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300">
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white ">
         <div className="flex items-center space-x-4 space-x-reverse">
-          <div className="text-white">
-            <UnitIcon iconType={unit?.icon} className="w-12 h-12" />
-          </div>
           <div>
             <h3 className="text-2xl font-bold mb-2">{unitName}</h3>
             <p className="opacity-90">{unitDescription}</p>
