@@ -1,25 +1,105 @@
 'use client'
 
 import Link from 'next/link'
+import { urlFor } from '../../lib/sanity'
+
+// Utility function to safely extract text from Portable Text or return plain text
+const extractText = (content) => {
+  if (!content) return '';
+  
+  // If it's already a string, return it
+  if (typeof content === 'string') return content;
+  
+  // If it's a Portable Text array
+  if (Array.isArray(content)) {
+    return content
+      .map(block => {
+        if (block._type === 'block' && block.children) {
+          return block.children
+            .map(child => child.text || '')
+            .join('');
+        }
+        return '';
+      })
+      .join(' ');
+  }
+  
+  // If it's a single Portable Text block
+  if (content._type === 'block' && content.children) {
+    return content.children
+      .map(child => child.text || '')
+      .join('');
+  }
+  
+  return '';
+};
+
+// Utility function to safely get image URL
+const getImageUrl = (image) => {
+  if (!image) return "/images/departments/default.jpg";
+  
+  // If it's already a URL string
+  if (typeof image === 'string') return image;
+  
+  // If it's a Sanity image object, use urlFor to build the URL
+  if (image.asset) {
+    try {
+      return urlFor(image).width(800).height(600).url();
+    } catch (error) {
+      console.warn('Error building image URL:', error);
+      return "/images/departments/default.jpg";
+    }
+  }
+  
+  return "/images/departments/default.jpg";
+};
 
 const DepartmentCard = ({ department }) => {
+  // Safety check - return null if department is invalid
+  if (!department || typeof department !== 'object') {
+    return null;
+  }
+  
+  // Extract statistics from Sanity format
+  const getStatValue = (stats, key) => {
+    if (!Array.isArray(stats)) return 0;
+    const stat = stats.find(s => s.label === key || s.key === key);
+    return stat?.value || 0;
+  };
+
+  // Provide default values for required fields with proper text extraction
+  const safeData = {
+    name: extractText(department.name) || 'قسم غير محدد',
+    description: extractText(department.description) || 'وصف غير متوفر',
+    vision: extractText(department.overview || department.vision) || 'رؤية غير متوفرة',
+    mission: extractText(department.mission) || 'رسالة غير متوفرة',
+    headOfDepartment: extractText(department.head?.name || department.headOfDepartment) || 'غير محدد',
+    facultyCount: getStatValue(department.statistics, 'facultyCount') || department.facultyCount || 8,
+    studentsCount: getStatValue(department.statistics, 'studentsCount') || department.studentsCount || 50,
+    specializations: department.facilities || department.researchAreas || department.specializations || [],
+    image: getImageUrl(department.image),
+    color: department.color || "from-blue-600 to-blue-800",
+    id: department._id || department.id || Math.random(),
+    slug: department.slug?.current || department.slug || department._id || 'unknown'
+  };
+
   return (
     <div className="bg-white rounded-2xl card-shadow overflow-hidden group">
       {/* Header with Image */}
       <div className="relative h-48">
         <img
-          src={department.image}
-          alt={department.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          src={safeData.image}
+          alt={safeData.name}
+          className="w-full h-full object-cover"
           onError={(e) => {
-            e.currentTarget.src = "data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='16' text-anchor='middle' dy='.3em' fill='%236b7280'%3E" + department.name + "%3C/text%3E%3C/svg%3E"
+            e.currentTarget.src = "data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='16' text-anchor='middle' dy='.3em' fill='%236b7280'%3E" + safeData.name + "%3C/text%3E%3C/svg%3E"
           }}
         />
-        <div className={`absolute inset-0 bg-gradient-to-t ${department.color} opacity-80`}></div>
-        <div className="absolute inset-0 flex items-end p-6">
+        <div className={`absolute inset-0 backdrop-blur-[25px] bg-black/50`}></div>
+        <div className="absolute inset-0 flex items-start p-6">
           <div className="text-white">
-            <h3 className="text-2xl font-bold mb-2">{department.name}</h3>
-            <p className="opacity-90">{department.description}</p>
+            <h3 className="text-2xl font-bold mb-2">{safeData.name}</h3>
+            <p className="opacity-90 overflow-hidden text-ellipsis line-clamp-4">{safeData.description}</p>
           </div>
         </div>
       </div>
@@ -34,8 +114,8 @@ const DepartmentCard = ({ department }) => {
               <span className="text-white font-semibold text-sm">د</span>
             </div>
             <div>
-              <p className="font-medium text-gray-800">{department.headOfDepartment}</p>
-              <p className="text-sm text-gray-600">رئيس {department.name}</p>
+              <p className="font-medium text-gray-800">{safeData.headOfDepartment}</p>
+              <p className="text-sm text-gray-600">رئيس {safeData.name}</p>
             </div>
           </div>
         </div>
@@ -43,11 +123,11 @@ const DepartmentCard = ({ department }) => {
         {/* Statistics */}
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="text-center p-3 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{department.facultyCount}</div>
+            <div className="text-2xl font-bold text-blue-600">{safeData.facultyCount}</div>
             <div className="text-sm text-blue-700">عضو هيئة تدريس</div>
           </div>
           <div className="text-center p-3 bg-purple-50 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">{department.studentsCount}</div>
+            <div className="text-2xl font-bold text-purple-600">{safeData.studentsCount}</div>
             <div className="text-sm text-purple-700">طالبة</div>
           </div>
         </div>
@@ -62,7 +142,7 @@ const DepartmentCard = ({ department }) => {
               </svg>
               الرؤية
             </h5>
-            <p className="text-gray-600 text-sm leading-relaxed">{department.vision}</p>
+            <p className="text-gray-600 text-sm leading-relaxed">{safeData.vision}</p>
           </div>
 
           <div>
@@ -72,7 +152,7 @@ const DepartmentCard = ({ department }) => {
               </svg>
               الرسالة
             </h5>
-            <p className="text-gray-600 text-sm leading-relaxed">{department.mission}</p>
+            <p className="text-gray-600 text-sm leading-relaxed">{safeData.mission}</p>
           </div>
         </div>
 
@@ -80,14 +160,20 @@ const DepartmentCard = ({ department }) => {
         <div className="mb-6">
           <h5 className="font-semibold text-gray-800 mb-3">التخصصات الفرعية</h5>
           <div className="flex flex-wrap gap-2">
-            {department.specializations.map((spec, index) => (
-              <span 
-                key={index}
-                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full  text-sm hover:bg-gray-200 transition-colors duration-200"
-              >
-                {spec}
+            {safeData.specializations.length > 0 ? (
+              safeData.specializations.map((spec, index) => (
+                <span 
+                  key={index}
+                  className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full  text-sm hover:bg-gray-200 transition-colors duration-200"
+                >
+                  {spec}
+                </span>
+              ))
+            ) : (
+              <span className="px-3 py-1 bg-gray-100 text-gray-500 rounded-full text-sm">
+                لا توجد تخصصات محددة
               </span>
-            ))}
+            )}
           </div>
         </div>
 
@@ -101,22 +187,22 @@ const DepartmentCard = ({ department }) => {
             </div>
             <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
               <span>أساتذة</span>
-              <span className="text-blue-600 font-medium">{Math.ceil(department.facultyCount * 0.3)}</span>
+              <span className="text-blue-600 font-medium">{Math.ceil(safeData.facultyCount * 0.3)}</span>
             </div>
             <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
               <span>أساتذة مشاركون</span>
-              <span className="text-blue-600 font-medium">{Math.ceil(department.facultyCount * 0.4)}</span>
+              <span className="text-blue-600 font-medium">{Math.ceil(safeData.facultyCount * 0.4)}</span>
             </div>
             <div className="flex justify-between items-center p-2 bg-gray-50 rounded">
               <span>أساتذة مساعدون</span>
-              <span className="text-blue-600 font-medium">{Math.floor(department.facultyCount * 0.3)}</span>
+              <span className="text-blue-600 font-medium">{Math.floor(safeData.facultyCount * 0.3)}</span>
             </div>
           </div>
         </div>
 
         {/* Action Button */}
         <Link 
-          href={`/departments/${department.id}`}
+          href={`/departments/${safeData.slug}`}
           className="w-full ml-[5px] btn-primary text-center block"
         >
           تفاصيل القسم

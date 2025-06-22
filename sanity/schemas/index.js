@@ -12,6 +12,7 @@ import visionMission from './documents/visionMission'
 import deanMessage from './documents/deanMessage'
 import aboutPage from './documents/aboutPage'
 import gallery from './documents/gallery'
+import organizationalStructure from './documents/organizationalStructure'
 
 // Object types
 import blockContent from './objects/blockContent'
@@ -22,6 +23,7 @@ import seo from './objects/seo'
 import statistic from './objects/statistic'
 import contact from './objects/contact'
 import socialMedia from './objects/socialMedia'
+import organizationNode from './objects/organizationNode'
 
 export const schemaTypes = [
   // Document types
@@ -38,6 +40,7 @@ export const schemaTypes = [
   deanMessage,
   aboutPage,
   gallery,
+  organizationalStructure,
   
   // Object types
   blockContent,
@@ -48,4 +51,5 @@ export const schemaTypes = [
   statistic,
   contact,
   socialMedia,
+  organizationNode,
 ] 

@@ -253,7 +253,7 @@ export default async function ProgramsPage() {
     sanityFetch({ query: queries.programs }),
     sanityFetch({ query: queries.siteSettings })
   ])
-  
+
   // Use Sanity data if available, otherwise fallback to hardcoded programs
   const allPrograms = programsData?.length > 0 ? programsData : programs
 
@@ -275,13 +275,13 @@ export default async function ProgramsPage() {
           </div>
         </div>
       </section>
-
+{/* 
       <ProgramStats programs={allPrograms} />
-      
+       */}
       {/* Programs Grid */}
       <section className="py-20 bg-white">
         <div className="section-container">
-          <div className="space-y-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {allPrograms.map((program, index) => (
               <ProgramCard key={program._id || program.id || index} program={program} />
             ))}

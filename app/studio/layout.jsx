@@ -6,9 +6,5 @@ export const metadata = {
 export default function StudioLayout({
   children,
 }) {
-  return (
-    <html lang="ar">
-      <body style={{margin: 0}}>{children}</body>
-    </html>
-  )
+  return children
 } 

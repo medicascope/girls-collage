@@ -2,6 +2,7 @@ import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import CollegeHistory from '../../components/about/CollegeHistory'
 import StrategicGoals from '../../components/about/StrategicGoals'
+import OrganizationalStructure from '../../components/about/OrganizationalStructure'
 import CollegeVideo from '../../components/about/CollegeVideo'
 import { sanityFetch, queries } from '../../lib/sanity'
 
@@ -11,10 +12,11 @@ export const metadata = {
 }
 
 export default async function AboutPage() {
-  // Fetch site settings and about page data
-  const [siteSettings, aboutData] = await Promise.all([
+  // Fetch site settings, about page data, and organizational structure
+  const [siteSettings, aboutData, organizationData] = await Promise.all([
     sanityFetch({ query: queries.siteSettings }),
-    sanityFetch({ query: queries.aboutPage })
+    sanityFetch({ query: queries.aboutPage }),
+    sanityFetch({ query: queries.organizationalStructure })
   ])
 
   return (
@@ -36,6 +38,7 @@ export default async function AboutPage() {
       </section>
 
       <CollegeHistory aboutData={aboutData} />
+      <OrganizationalStructure data={organizationData} />
       <StrategicGoals aboutData={aboutData} />
       <CollegeVideo aboutData={aboutData} />
       

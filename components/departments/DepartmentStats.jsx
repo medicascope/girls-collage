@@ -1,15 +1,15 @@
 const DepartmentStats = ({ departments }) => {
   // Calculate overall statistics
   const totalFaculty = departments.reduce(
-    (sum, dept) => sum + dept.facultyCount,
+    (sum, dept) => sum + (dept.facultyCount || 0),
     0
   );
   const totalStudents = departments.reduce(
-    (sum, dept) => sum + dept.studentsCount,
+    (sum, dept) => sum + (dept.studentsCount || 0),
     0
   );
   const totalSpecializations = departments.reduce(
-    (sum, dept) => sum + dept.specializations.length,
+    (sum, dept) => sum + (dept.specializations?.length || 0),
     0
   );
   const totalDepartments = departments.length;
@@ -146,7 +146,7 @@ const DepartmentStats = ({ departments }) => {
           <div className="space-y-4">
             {departments.map((dept, index) => {
               const percentage = (
-                (dept.facultyCount / totalFaculty) *
+                ((dept.facultyCount || 0) / Math.max(totalFaculty, 1)) *
                 100
               ).toFixed(1);
               return (
@@ -167,7 +167,7 @@ const DepartmentStats = ({ departments }) => {
                       </div>
                     </div>
                     <div className="text-sm font-medium text-gray-600 w-16 text-left mt-2 md:mt-0">
-                      {dept.facultyCount} ({percentage}%)
+                      {dept.facultyCount || 0} ({percentage}%)
                     </div>
                   </div>
                 </div>

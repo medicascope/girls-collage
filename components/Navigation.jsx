@@ -19,7 +19,6 @@ const Navigation = ({ siteSettings }) => {
     { name: "أقسام الكلية", href: "/departments" },
     { name: "البرامج الدراسية", href: "/programs" },
     { name: "وحدات الكلية", href: "/units" },
-    { name: "مستشفيات الكلية", href: "/hospitals" },
     { name: "الأخبار", href: "/news" },
     { name: "اتصل بنا", href: "/contact" },
   ];
