@@ -95,7 +95,7 @@ const DepartmentCard = ({ department }) => {
             e.currentTarget.src = "data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='16' text-anchor='middle' dy='.3em' fill='%236b7280'%3E" + safeData.name + "%3C/text%3E%3C/svg%3E"
           }}
         />
-        <div className={`absolute inset-0 backdrop-blur-[25px] bg-black/50`}></div>
+        <div style={{backgroundColor: 'rgba(0, 0, 0, 0.5)'}} className={`absolute inset-0 backdrop-blur-[25px] bg-gradient-to-br from-blue-900/25 via-blue-800/25 to-purple-900/25`}></div>
         <div className="absolute inset-0 flex items-start p-6">
           <div className="text-white">
             <h3 className="text-2xl font-bold mb-2">{safeData.name}</h3>

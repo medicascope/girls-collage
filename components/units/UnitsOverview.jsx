@@ -1,36 +1,72 @@
+import UnitIcon from './UnitIcon'
+
+// Utility function to safely extract text from Portable Text or return plain text
+const extractText = (content) => {
+  if (!content) return '';
+  
+  // If it's already a string, return it
+  if (typeof content === 'string') return content;
+  
+  // If it's a Portable Text array
+  if (Array.isArray(content)) {
+    return content
+      .map(block => {
+        if (block._type === 'block' && block.children) {
+          return block.children
+            .map(child => child.text || '')
+            .join('');
+        }
+        return '';
+      })
+      .join(' ');
+  }
+  
+  // If it's a single Portable Text block
+  if (content._type === 'block' && content.children) {
+    return content.children
+      .map(child => child.text || '')
+      .join('');
+  }
+  
+  return '';
+};
+
 export default function UnitsOverview({ units }) {
-  // Calculate totals
-  const totalMembers = units.reduce((sum, unit) => sum + unit.members, 0)
-  const totalPublications = units.reduce((sum, unit) => sum + unit.publications.length, 0)
-  const totalCommittees = units.reduce((sum, unit) => sum + unit.committees.length, 0)
-  const avgEstablishedYear = Math.round(units.reduce((sum, unit) => sum + unit.establishedYear, 0) / units.length)
+  // Safety check
+  if (!units || !Array.isArray(units)) return null;
+
+  // Calculate totals with safe defaults
+  const totalMembers = units.reduce((sum, unit) => sum + (unit?.members || 0), 0)
+  const totalPublications = units.reduce((sum, unit) => sum + (unit?.publications?.length || 0), 0)
+  const totalCommittees = units.reduce((sum, unit) => sum + (unit?.committees?.length || 0), 0)
+  const avgEstablishedYear = units.length > 0 ? Math.round(units.reduce((sum, unit) => sum + (unit?.establishedYear || 2020), 0) / units.length) : 2020
 
   const stats = [
     {
       title: 'عدد الوحدات',
       value: units.length,
-      icon: '🏢',
+      icon: 'building',
       color: 'from-blue-600 to-blue-700',
       bgColor: 'from-blue-50 to-blue-100'
     },
     {
       title: 'إجمالي الأعضاء',
       value: totalMembers,
-      icon: '👥',
+      icon: 'people',
       color: 'from-green-600 to-green-700',
       bgColor: 'from-green-50 to-green-100'
     },
     {
       title: 'إجمالي المنشورات',
       value: totalPublications,
-      icon: '📚',
+      icon: 'books',
       color: 'from-purple-600 to-purple-700',
       bgColor: 'from-purple-50 to-purple-100'
     },
     {
       title: 'إجمالي اللجان',
       value: totalCommittees,
-      icon: '⚙️',
+      icon: 'gear',
       color: 'from-orange-600 to-orange-700',
       bgColor: 'from-orange-50 to-orange-100'
     }
@@ -57,13 +93,19 @@ export default function UnitsOverview({ units }) {
             >
               {/* Background Pattern */}
               <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-4 right-4 text-4xl">{stat.icon}</div>
-                <div className="absolute bottom-4 left-4 text-2xl opacity-50">{stat.icon}</div>
+                <div className="absolute top-4 right-4">
+                  <UnitIcon iconType={stat.icon} className="w-10 h-10" />
+                </div>
+                <div className="absolute bottom-4 left-4 opacity-50">
+                  <UnitIcon iconType={stat.icon} className="w-6 h-6" />
+                </div>
               </div>
 
               {/* Content */}
               <div className="relative z-10">
-                <div className="text-4xl mb-4">{stat.icon}</div>
+                <div className="mb-4">
+                  <UnitIcon iconType={stat.icon} className="w-10 h-10 mx-auto" />
+                </div>
                 <div className={`text-3xl lg:text-4xl font-bold mb-3 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
                   {stat.value.toLocaleString()}
                 </div>
@@ -82,12 +124,14 @@ export default function UnitsOverview({ units }) {
               <span className="gradient-text">وحدات الجودة والتطوير</span>
             </h3>
             <div className="space-y-4">
-              {units.filter(unit => ['وحدة ضمان الجودة والاعتماد الأكاديمي', 'وحدة القياس والتقويم'].includes(unit.name)).map((unit, index) => (
+              {units.filter(unit => ['وحدة ضمان الجودة والاعتماد الأكاديمي', 'وحدة القياس والتقويم'].includes(extractText(unit?.name))).map((unit, index) => (
                 <div key={index} className="flex items-center space-x-3 space-x-reverse p-4 bg-blue-50 rounded-lg">
-                  <div className="text-2xl ml-[5px] mr-0">{unit.icon}</div>
+                  <div className="ml-[5px] mr-0">
+                    <UnitIcon iconType={unit?.icon} className="w-8 h-8" />
+                  </div>
                   <div>
-                    <h4 className="font-bold text-gray-800">{unit.name}</h4>
-                    <p className="text-gray-600 text-sm">{unit.members} عضو</p>
+                    <h4 className="font-bold text-gray-800">{extractText(unit?.name)}</h4>
+                    <p className="text-gray-600 text-sm">{unit?.members || 0} عضو</p>
                   </div>
                 </div>
               ))}
@@ -99,12 +143,14 @@ export default function UnitsOverview({ units }) {
               <span className="gradient-text">وحدات التعليم والتدريب</span>
             </h3>
             <div className="space-y-4">
-              {units.filter(unit => ['وحدة التعليم الطبي المتكامل', 'وحدة التعلم الإلكتروني', 'مختبر المهارات الطبية'].includes(unit.name)).map((unit, index) => (
+              {units.filter(unit => ['وحدة التعليم الطبي المتكامل', 'وحدة التعلم الإلكتروني', 'مختبر المهارات الطبية'].includes(extractText(unit?.name))).map((unit, index) => (
                 <div key={index} className="flex items-center space-x-3 space-x-reverse p-4 bg-green-50 rounded-lg">
-                  <div className="text-2xl ml-[5px] mr-0">{unit.icon}</div>
+                  <div className="ml-[5px] mr-0">
+                    <UnitIcon iconType={unit?.icon} className="w-8 h-8" />
+                  </div>
                   <div>
-                    <h4 className="font-bold text-gray-800">{unit.name}</h4>
-                    <p className="text-gray-600 text-sm">{unit.members} عضو</p>
+                    <h4 className="font-bold text-gray-800">{extractText(unit?.name)}</h4>
+                    <p className="text-gray-600 text-sm">{unit?.members || 0} عضو</p>
                   </div>
                 </div>
               ))}
@@ -112,31 +158,21 @@ export default function UnitsOverview({ units }) {
           </div>
         </div>
 
-        {/* Key Features */}
-        <div className="bg-white p-8 rounded-2xl shadow-xl">
-          <h3 className="text-2xl font-bold text-center mb-14">
-            <span className="gradient-text">المميزات الرئيسية للوحدات</span>
+        {/* Why Choose Our Units */}
+        <div className="bg-white p-12 rounded-2xl shadow-xl">
+          <h3 className="text-3xl font-bold text-center mb-12">
+            <span className="gradient-text">لماذا وحداتنا متميزة؟</span>
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
               </div>
-              <h4 className="text-xl font-bold mb-2">معايير الجودة</h4>
-              <p className="text-gray-600">تطبيق أعلى معايير الجودة العالمية في التعليم الطبي</p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </div>
-              <h4 className="text-xl font-bold mb-2">التطوير المستمر</h4>
-              <p className="text-gray-600">تحديث مستمر للمناهج والأساليب التعليمية</p>
+              <h4 className="text-xl font-bold mb-2">الجودة والتميز</h4>
+              <p className="text-gray-600">معايير جودة عالمية في جميع الخدمات</p>
             </div>
 
             <div className="text-center">
