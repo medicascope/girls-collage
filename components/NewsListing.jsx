@@ -299,10 +299,10 @@ const NewsListing = ({ newsData }) => {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`px-4 py-2 rounded-lg ${
+                className={`px-4 py-2 rounded-xl ml-[5px] mr-0 transition-all duration-200 cursor-pointer ${
                   currentPage === page
-                    ? 'bg-blue-600 text-white'
-                    : 'text-blue-600 hover:bg-blue-50'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-blue-600 hover:bg-blue-50 border border-blue-600'
                 }`}
               >
                 {page}
@@ -323,4 +323,4 @@ const NewsListing = ({ newsData }) => {
   )
 }
 
-export default NewsListing 
+export default NewsListing

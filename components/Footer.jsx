@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { urlFor } from '../lib/sanity'
+import { FaFacebookF, FaTelegramPlane, FaInstagram, FaLinkedinIn } from 'react-icons/fa'
 
 const Footer = ({ siteSettings }) => {
   // Use Sanity data if available, otherwise fallback
@@ -60,9 +61,9 @@ const Footer = ({ siteSettings }) => {
     <footer className="bg-gray-900 text-white">
       {/* Main Footer Content */}
       <div className="section-container py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-5 gap-8">
           {/* College Info */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 flex flex-col">
             <div className="flex items-center space-x-reverse space-x-3 mb-6">
               {settings.logo?.asset ? (
                 <img 
@@ -71,99 +72,75 @@ const Footer = ({ siteSettings }) => {
                   className="w-10 h-10 rounded-full"
                 />
               ) : (
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mr-0 ml-[7px]">
                   <span className="text-white font-bold">كب</span>
                 </div>
               )}
               <div>
                 <h3 className="text-lg font-bold">{settings.title}</h3>
-                <p className="text-sm text-gray-400">{settings.titleEn}</p>
+                <p className="text-sm text-gray-400 mt-[-5px]">{settings.titleEn}</p>
               </div>
             </div>
             <p className="text-gray-300 text-sm mb-6">
               {settings.footerText}
             </p>
-            
             {/* Social Media */}
-            <div className="flex space-x-reverse space-x-4">
-              {settings.socialMedia?.map((social, index) => {
-                const getSocialColor = (platform) => {
-                  switch (platform) {
-                    case 'facebook': return 'bg-blue-600 hover:bg-blue-700'
-                    case 'twitter': return 'bg-blue-400 hover:bg-blue-500'
-                    case 'instagram': return 'bg-pink-600 hover:bg-pink-700'
-                    case 'linkedin': return 'bg-blue-700 hover:bg-blue-800'
-                    case 'youtube': return 'bg-red-600 hover:bg-red-700'
-                    case 'telegram': return 'bg-blue-500 hover:bg-blue-600'
-                    case 'whatsapp': return 'bg-green-600 hover:bg-green-700'
-                    default: return 'bg-gray-600 hover:bg-gray-700'
-                  }
-                }
-                
-                const getSocialIcon = (platform) => {
-                  switch (platform) {
-                    case 'facebook': return 'ف'
-                    case 'twitter': return 'ت'
-                    case 'instagram': return 'إ'
-                    case 'linkedin': return 'ل'
-                    case 'youtube': return 'ي'
-                    case 'telegram': return 'ت'
-                    case 'whatsapp': return 'و'
-                    default: return '+'
-                  }
-                }
-                
-                return (
-                  <a 
-                    key={index}
-                    href={social.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={`w-8 h-8 ${getSocialColor(social.platform)} rounded-full flex items-center justify-center transition-colors duration-300`}
-                  >
-                    <span className="text-xs">{getSocialIcon(social.platform)}</span>
-                  </a>
-                )
-              })}
-              
-              {/* Fallback social icons if no Sanity data */}
-              {(!settings.socialMedia || settings.socialMedia.length === 0) && (
-                <>
-                  <a href="#" className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors duration-300">
-                    <span className="text-xs">ف</span>
-                  </a>
-                  <a href="#" className="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors duration-300">
-                    <span className="text-xs">ت</span>
-                  </a>
-                  <a href="#" className="w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors duration-300">
-                    <span className="text-xs">إ</span>
-                  </a>
-                  <a href="#" className="w-8 h-8 bg-blue-700 rounded-full flex items-center justify-center hover:bg-blue-800 transition-colors duration-300">
-                    <span className="text-xs">ل</span>
-                  </a>
-                </>
-              )}
+            <div className="flex space-x-reverse space-x-4 mb-8 md:mb-8">
+              {/* Social icons using react-icons */}
+              <a href="#" className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors duration-300 ml-[16px] mr-[0]" aria-label="Facebook">
+                <FaFacebookF className="text-white text-lg" />
+              </a>
+              <a href="#" className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors duration-300 ml-[16px] mr-[0]" aria-label="Telegram">
+                <FaTelegramPlane className="text-white text-lg mt-[1px] mr-[2px]" />
+              </a>
+              <a href="#" className="w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors duration-300 ml-[16px] mr-[0]" aria-label="Instagram">
+                <FaInstagram className="text-white text-lg" />
+              </a>
+              <a href="#" className="w-8 h-8 bg-blue-700 rounded-full flex items-center justify-center hover:bg-blue-800 transition-colors duration-300 ml-[16px]" aria-label="LinkedIn">
+                <FaLinkedinIn className="text-white text-lg" />
+              </a>
+            </div>
+            {/* On medium and below, show the rest of the content below icons */}
+            <div className="flex flex-col md:hidden">
+              {footerSections.map((section) => (
+                <div key={section.title} className="mt-6">
+                  <h4 className="text-lg font-semibold mb-4 text-white">{section.title}</h4>
+                  <ul className="space-y-2">
+                    {section.links.map((link) => (
+                      <li key={link.name}>
+                        <Link 
+                          href={link.href}
+                          className="text-gray-300 hover:text-white transition-colors duration-300 text-sm"
+                        >
+                          {link.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
-
-          {/* Footer Links */}
-          {footerSections.map((section) => (
-            <div key={section.title}>
-              <h4 className="text-lg font-semibold mb-4 text-white">{section.title}</h4>
-              <ul className="space-y-2">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    <Link 
-                      href={link.href}
-                      className="text-gray-300 hover:text-white transition-colors duration-300 text-sm"
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* On large screens, show the footer sections as columns */}
+          <div className="hidden md:flex lg:col-span-4 w-full">
+            {footerSections.map((section) => (
+              <div key={section.title} className="flex-1 ml-8">
+                <h4 className="text-lg font-semibold mb-4 text-white">{section.title}</h4>
+                <ul className="space-y-2">
+                  {section.links.map((link) => (
+                    <li key={link.name}>
+                      <Link 
+                        href={link.href}
+                        className="text-gray-300 hover:text-white transition-colors duration-300 text-sm"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -236,4 +213,4 @@ const Footer = ({ siteSettings }) => {
   )
 }
 
-export default Footer 
+export default Footer

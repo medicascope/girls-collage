@@ -27,7 +27,7 @@ const Hero = ({ heroData }) => {
     }
   }
   return (
-    <section className="relative min-h-screen flex items-center">
+    <section className="relative min-h-screen flex items-center mt-[90px] md:mt-[88px]">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-red-50">
         <div className="absolute inset-0 opacity-20" style={{
@@ -100,7 +100,7 @@ const Hero = ({ heroData }) => {
             {data.deanCard?.show && (
             <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-xl card-shadow max-w-sm">
               <div className="flex items-center space-x-reverse space-x-4">
-                <div className="relative w-16 h-16 rounded-full overflow-hidden">
+                <div className="relative w-16 h-16 rounded-full overflow-hidden ml-[7px]" >
                   <img
                       src={data.deanCard.image?.asset ? urlFor(data.deanCard.image).width(64).height(64).url() : "https://yaledailynews.com/wp-content/uploads/2025/01/femaleurologist_kb_Courtesy-of-Leslie-Rickey.jpg"}
                       alt={data.deanCard.image?.alt || "معالي العميدة"}
@@ -139,4 +139,4 @@ const Hero = ({ heroData }) => {
   )
 }
 
-export default Hero 
+export default Hero

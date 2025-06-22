@@ -57,7 +57,7 @@ const FeaturedGallery = ({ galleriesData }) => {
   return (
     <section className="py-20 bg-white">
       <div className="section-container">
-        <div className="text-center mb-16">
+        <div className="text-center">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
             <span className="gradient-text">معرض الصور</span>
           </h2>
@@ -135,7 +135,7 @@ const FeaturedGallery = ({ galleriesData }) => {
         </div>
 
         {/* Statistics Bar */}
-        <div className="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
+        <div className="mt-[30px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-3xl font-bold mb-2">500+</div>

@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 
 const DepartmentCard = ({ department }) => {
@@ -31,7 +30,7 @@ const DepartmentCard = ({ department }) => {
         <div className="mb-6">
           <h4 className="text-lg font-semibold text-gray-800 mb-2">رئيس القسم</h4>
           <div className="flex items-center space-x-reverse space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-gray-300 to-gray-400 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-gray-300 to-gray-400 rounded-full ml-[5px] flex items-center justify-center">
               <span className="text-white font-semibold text-sm">د</span>
             </div>
             <div>
@@ -84,7 +83,7 @@ const DepartmentCard = ({ department }) => {
             {department.specializations.map((spec, index) => (
               <span 
                 key={index}
-                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition-colors duration-200"
+                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full  text-sm hover:bg-gray-200 transition-colors duration-200"
               >
                 {spec}
               </span>
@@ -118,7 +117,7 @@ const DepartmentCard = ({ department }) => {
         {/* Action Button */}
         <Link 
           href={`/departments/${department.id}`}
-          className="w-full btn-primary text-center block"
+          className="w-full ml-[5px] btn-primary text-center block"
         >
           تفاصيل القسم
         </Link>

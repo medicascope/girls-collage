@@ -84,7 +84,7 @@ export default function UnitsOverview({ units }) {
             <div className="space-y-4">
               {units.filter(unit => ['وحدة ضمان الجودة والاعتماد الأكاديمي', 'وحدة القياس والتقويم'].includes(unit.name)).map((unit, index) => (
                 <div key={index} className="flex items-center space-x-3 space-x-reverse p-4 bg-blue-50 rounded-lg">
-                  <div className="text-2xl">{unit.icon}</div>
+                  <div className="text-2xl ml-[5px] mr-0">{unit.icon}</div>
                   <div>
                     <h4 className="font-bold text-gray-800">{unit.name}</h4>
                     <p className="text-gray-600 text-sm">{unit.members} عضو</p>
@@ -101,7 +101,7 @@ export default function UnitsOverview({ units }) {
             <div className="space-y-4">
               {units.filter(unit => ['وحدة التعليم الطبي المتكامل', 'وحدة التعلم الإلكتروني', 'مختبر المهارات الطبية'].includes(unit.name)).map((unit, index) => (
                 <div key={index} className="flex items-center space-x-3 space-x-reverse p-4 bg-green-50 rounded-lg">
-                  <div className="text-2xl">{unit.icon}</div>
+                  <div className="text-2xl ml-[5px] mr-0">{unit.icon}</div>
                   <div>
                     <h4 className="font-bold text-gray-800">{unit.name}</h4>
                     <p className="text-gray-600 text-sm">{unit.members} عضو</p>
@@ -114,7 +114,7 @@ export default function UnitsOverview({ units }) {
 
         {/* Key Features */}
         <div className="bg-white p-8 rounded-2xl shadow-xl">
-          <h3 className="text-2xl font-bold text-center mb-8">
+          <h3 className="text-2xl font-bold text-center mb-14">
             <span className="gradient-text">المميزات الرئيسية للوحدات</span>
           </h3>
           

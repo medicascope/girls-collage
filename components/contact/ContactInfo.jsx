@@ -102,7 +102,7 @@ export default function ContactInfo() {
               <a
                 key={index}
                 href={social.link}
-                className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white text-xl hover:scale-110 transition-transform"
+                className="w-12 h-12 mr-0 ml-[16px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white text-xl hover:scale-110 transition-transform"
                 title={social.name}
               >
                 {social.icon}

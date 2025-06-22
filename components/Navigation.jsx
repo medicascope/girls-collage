@@ -1,50 +1,50 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { urlFor } from '../lib/sanity'
+import { useState } from "react";
+import Link from "next/link";
+import { urlFor } from "../lib/sanity";
 
 const Navigation = ({ siteSettings }) => {
   // Use Sanity data if available, otherwise fallback
   const settings = siteSettings || {
-    title: 'كلية البنات الطبية',
-    titleEn: 'Girls Medical College',
-    logo: null
-  }
-  const [isOpen, setIsOpen] = useState(false)
+    title: "كلية الطب << بنات القاهرة >> جامعة الأزهر",
+    titleEn: "Faculty of Medicine for Girls",
+    logo: null,
+  };
+  const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { name: 'الرئيسية', href: '/' },
-    { name: 'نبذة عن الكلية', href: '/about' },
-    { name: 'أقسام الكلية', href: '/departments' },
-    { name: 'البرامج الدراسية', href: '/programs' },
-    { name: 'وحدات الكلية', href: '/units' },
-    { name: 'مستشفيات الكلية', href: '/hospitals' },
-    { name: 'الأخبار', href: '/news' },
-    { name: 'اتصل بنا', href: '/contact' }
-  ]
+    { name: "الرئيسية", href: "/" },
+    { name: "نبذة عن الكلية", href: "/about" },
+    { name: "أقسام الكلية", href: "/departments" },
+    { name: "البرامج الدراسية", href: "/programs" },
+    { name: "وحدات الكلية", href: "/units" },
+    { name: "مستشفيات الكلية", href: "/hospitals" },
+    { name: "الأخبار", href: "/news" },
+    { name: "اتصل بنا", href: "/contact" },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg bg-white/80 border-b border-white/20">
-      <div className="section-container">
+      <div className="section-container ">
         <div className="flex justify-between items-center py-5">
           {/* Logo Section */}
           <div className="flex items-center space-x-reverse space-x-4">
             {settings.logo?.asset ? (
-              <img 
-                src={urlFor(settings.logo).width(48).height(48).url()} 
+              <img
+                src={urlFor(settings.logo).width(48).height(48).url()}
                 alt={settings.logo.alt || settings.title}
                 className="w-12 h-12 ml-4 rounded-lg object-cover"
               />
             ) : (
-              <img 
-                src="/logo.jpg" 
-                alt="logo" 
-                className="w-12 h-12 ml-4 rounded-lg object-cover" 
+              <img
+                src="/logo.jpg"
+                alt="logo"
+                className="w-12 h-12 ml-4 rounded-lg object-cover"
               />
             )}
             <div>
-              <h1 className="text-xl font-semibold text-gray-900 leading-tight">
+              <h1 className="text-[14px] font-semibold text-gray-900 leading-tight">
                 {settings.title}
               </h1>
               <p className="text-xs font-medium text-gray-600 tracking-wide uppercase">
@@ -59,7 +59,7 @@ const Navigation = ({ siteSettings }) => {
               <Link
                 key={item.name}
                 href={item.href}
-                className="relative text-gray-700 hover:text-gray-900 transition-colors duration-200 font-medium text-sm py-2 px-1 group"
+                className="relative text-gray-700 hover:text-gray-900 transition-colors duration-200 font-medium text-sm py-2 px-1 group mr-[28px]"
               >
                 {item.name}
                 <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900 transform scale-x-0 transition-transform duration-200 group-hover:scale-x-100 origin-left"></span>
@@ -71,20 +71,28 @@ const Navigation = ({ siteSettings }) => {
           <div className="lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 text-gray-700 hover:text-gray-900 focus:outline-none transition-colors duration-200"
+              className="p-2 text-gray-700 hover:text-gray-900 focus:outline-none transition-colors duration-200 cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               <div className="w-6 h-6 flex flex-col justify-center items-center">
-                <span className={`block w-6 h-0.5 bg-current transition-all duration-200 ${isOpen ? 'rotate-45 translate-y-0.5' : '-translate-y-1'}`}></span>
-                <span className={`block w-6 h-0.5 bg-current transition-all duration-200 ${isOpen ? 'opacity-0' : 'opacity-100'}`}></span>
-                <span className={`block w-6 h-0.5 bg-current transition-all duration-200 ${isOpen ? '-rotate-45 -translate-y-0.5' : 'translate-y-1'}`}></span>
+                <span
+                  className={`block w-6 h-0.5 bg-current transition-all duration-200 ${isOpen ? "rotate-45 translate-y-0.5" : "-translate-y-1"}`}
+                ></span>
+                <span
+                  className={`block w-6 h-0.5 bg-current transition-all duration-200 ${isOpen ? "opacity-0" : "opacity-100"}`}
+                ></span>
+                <span
+                  className={`block w-6 h-0.5 bg-current transition-all duration-200 ${isOpen ? "-rotate-45 -translate-y-0.5" : "translate-y-1"}`}
+                ></span>
               </div>
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
-        <div className={`lg:hidden overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-80 pb-6' : 'max-h-0'}`}>
+        <div
+          className={`lg:hidden overflow-hidden transition-all duration-300 ${isOpen ? "max-h-80 pb-6" : "max-h-0"}`}
+        >
           <div className="border-t border-white/30 pt-4">
             <div className="space-y-1">
               {navItems.map((item) => (
@@ -102,7 +110,7 @@ const Navigation = ({ siteSettings }) => {
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navigation 
+export default Navigation;

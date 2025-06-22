@@ -72,7 +72,7 @@ const LatestNews = ({ newsData }) => {
   return (
     <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
       <div className="section-container">
-        <div className="text-center mb-16">
+        <div className="text-center ">
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
             <span className="gradient-text">آخر الأخبار</span>
           </h2>

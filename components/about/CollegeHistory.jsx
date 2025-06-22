@@ -110,7 +110,7 @@ const CollegeHistory = ({ aboutData }) => {
                   const colors = ['bg-blue-600', 'bg-purple-600', 'bg-pink-600', 'bg-green-600']
                   return (
                     <div key={index} className="flex items-start space-x-reverse space-x-3">
-                      <div className={`w-8 h-8 ${colors[index % colors.length]} rounded-full flex items-center justify-center flex-shrink-0 mt-1`}>
+                      <div className={`w-8 h-8 ml-[5px] mt-[-2px] ${colors[index % colors.length]} rounded-full flex items-center justify-center flex-shrink-0 mt-1`}>
                         <span className="text-white text-sm font-bold">{index + 1}</span>
                       </div>
                       <div>

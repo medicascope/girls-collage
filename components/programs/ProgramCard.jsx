@@ -34,8 +34,8 @@ export default function ProgramCard({ program }) {
             </div>
             <h3 className="text-3xl font-bold mb-3">{program.name}</h3>
             <p className="text-xl opacity-90 mb-4">{program.description}</p>
-            <div className="flex items-center space-x-4 space-x-reverse">
-              <div className="text-center">
+            <div className="flex items-center space-x-4 space-x-reverse ">
+              <div className="text-center mr-0 ml-[10px]">
                 <div className="text-2xl font-bold">{program.capacity}</div>
                 <div className="text-sm opacity-80">سعة القبول</div>
               </div>
