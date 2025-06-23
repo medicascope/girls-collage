@@ -1,90 +1,113 @@
 export default {
-  name: 'unit',
-  title: 'College Unit',
-  type: 'document',
+  name: "unit",
+  title: "College Unit",
+  type: "document",
   fields: [
     {
-      name: 'name',
-      title: 'Unit Name',
-      type: 'string',
-      validation: Rule => Rule.required()
+      name: "name",
+      title: "Unit Name",
+      type: "string",
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: 'nameEn',
-      title: 'Unit Name (English)',
-      type: 'string'
+      name: "nameEn",
+      title: "Unit Name (English)",
+      type: "string",
     },
     {
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
+      name: "slug",
+      title: "Slug",
+      type: "slug",
       options: {
-        source: 'name',
-        maxLength: 96
+        source: "name",
+        maxLength: 96,
       },
-      validation: Rule => Rule.required()
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: 'description',
-      title: 'Description',
-      type: 'blockContent',
-      validation: Rule => Rule.required()
+      name: "description",
+      title: "Description",
+      type: "blockContent",
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: 'image',
-      title: 'Unit Image',
-      type: 'customImage'
+      name: "image",
+      title: "Unit Image",
+      type: "customImage",
     },
     {
-      name: 'head',
-      title: 'Unit Head',
-      type: 'reference',
-      to: [{type: 'staff'}]
+      name: "mission",
+      title: "Department Mission",
+      type: "text",
+      rows: 3,
     },
     {
-      name: 'staff',
-      title: 'Unit Staff',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'staff'}]}]
+      name: "facilities",
+      title: "Facilities",
+      type: "array",
+      of: [{ type: "string" }],
     },
     {
-      name: 'objectives',
-      title: 'Objectives',
-      type: 'array',
-      of: [{type: 'string'}]
+      name: "head",
+      title: "Unit Head",
+      type: "reference",
+      to: [{ type: "staff" }],
     },
     {
-      name: 'services',
-      title: 'Services Provided',
-      type: 'array',
-      of: [{type: 'string'}]
+      name: "staff",
+      title: "Unit Staff",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "staff" }] }],
     },
     {
-      name: 'achievements',
-      title: 'Key Achievements',
-      type: 'array',
-      of: [{type: 'string'}]
+      name: "objectives",
+      title: "Objectives",
+      type: "array",
+      of: [{ type: "string" }],
     },
     {
-      name: 'contact',
-      title: 'Contact Information',
-      type: 'contact'
+      name: "services",
+      title: "Services Provided",
+      type: "array",
+      of: [{ type: "string" }],
     },
     {
-      name: 'order',
-      title: 'Display Order',
-      type: 'number'
+      name: "ourVision",
+      title: "Our Vision",
+      type: "text",
     },
     {
-      name: 'seo',
-      title: 'SEO',
-      type: 'seo'
-    }
+      name: "achievements",
+      title: "Key Achievements",
+      type: "array",
+      of: [{ type: "string" }],
+    },
+    {
+      name: "contact",
+      title: "Contact Information",
+      type: "contact",
+    },
+    {
+      name: "order",
+      title: "Display Order",
+      type: "number",
+    },
+    {
+      name: "seo",
+      title: "SEO",
+      type: "seo",
+    },
+    {
+      name: "departmentQualityObjectives",
+      title: "Department Quality Objectives",
+      type: "array",
+      of: [{ type: "string" }],
+    },
   ],
   preview: {
     select: {
-      title: 'name',
-      media: 'image'
-    }
-  }
-} 
+      title: "name",
+      media: "image",
+    },
+  },
+};
