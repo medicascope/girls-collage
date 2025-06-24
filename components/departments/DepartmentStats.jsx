@@ -1,8 +1,16 @@
 const DepartmentStats = ({ departments }) => {
   // Calculate overall statistics
   const totalFaculty = departments.reduce(
-    (sum, dept) => sum + (dept.facultyCount || 0),
+    (sum, dept) =>
+      sum +
+      (dept.facultyCount || 0) +
+      (dept.unitStaffCount || 0) +
+      (dept.headUnitCount || 0),
     0
+  );
+  console.log(
+    "Total Faculty (facultyCount + all unit staffCount + all unit headCount):",
+    totalFaculty
   );
   const totalStudents = departments.reduce(
     (sum, dept) => sum + (dept.studentsCount || 0),

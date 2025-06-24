@@ -16,7 +16,8 @@ const Navigation = ({ siteSettings }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const pathname = usePathname();
-  
+  const router = useRouter();
+
   const navItems = [
     { name: "الرئيسية", href: "/" },
     { name: "نبذة عن الكلية", href: "/about" },
@@ -66,19 +67,21 @@ const Navigation = ({ siteSettings }) => {
                   key={item.name}
                   href={item.href}
                   className={`relative transition-colors duration-200 font-medium text-sm py-2 px-1 group mr-[28px] ${
-                    isActive 
-                      ? 'text-gray-900' 
-                      : 'text-gray-700 hover:text-gray-900'
+                    isActive
+                      ? "text-gray-900"
+                      : "text-gray-700 hover:text-gray-900"
                   }`}
                 >
                   {item.name}
-                  <span className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900 transform transition-transform duration-200 origin-left ${
-                    isActive 
-                      ? 'scale-x-100' 
-                      : 'scale-x-0 group-hover:scale-x-100'
-                  }`}></span>
+                  <span
+                    className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900 transform transition-transform duration-200 origin-left ${
+                      isActive
+                        ? "scale-x-100"
+                        : "scale-x-0 group-hover:scale-x-100"
+                    }`}
+                  ></span>
                 </Link>
-              )
+              );
             })}
           </div>
 
@@ -117,15 +120,15 @@ const Navigation = ({ siteSettings }) => {
                     key={item.name}
                     href={item.href}
                     className={`block py-3 px-4 rounded-full transition-all duration-200 font-medium ${
-                      isActive 
-                        ? 'text-gray-900 bg-white/70' 
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-white/50'
+                      isActive
+                        ? "text-gray-900 bg-white/70"
+                        : "text-gray-700 hover:text-gray-900 hover:bg-white/50"
                     }`}
                     onClick={() => setIsOpen(false)}
                   >
                     {item.name}
                   </Link>
-                )
+                );
               })}
             </div>
           </div>

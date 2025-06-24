@@ -5,19 +5,21 @@
   --section-container-padding: 1rem;
   --section-container-padding-sm: 1.5rem;
   --section-container-padding-lg: 2rem;
-  
+
   --gradient-text-from: #2563eb;
   --gradient-text-via: #9333ea;
   --gradient-text-to: #ec4899;
-  
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  
+
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl:
+    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
   --btn-primary-from: #2563eb;
   --btn-primary-to: #9333ea;
   --btn-primary-hover-from: #1d4ed8;
   --btn-primary-hover-to: #7c3aed;
-  
+
   --btn-secondary-bg: #ffffff;
   --btn-secondary-text: #2563eb;
   --btn-secondary-border: #2563eb;
@@ -54,7 +56,12 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(to right, var(--gradient-text-from), var(--gradient-text-via), var(--gradient-text-to));
+  background: linear-gradient(
+    to right,
+    var(--gradient-text-from),
+    var(--gradient-text-via),
+    var(--gradient-text-to)
+  );
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
@@ -70,7 +77,11 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(to right, var(--btn-primary-from), var(--btn-primary-to));
+  background: linear-gradient(
+    to right,
+    var(--btn-primary-from),
+    var(--btn-primary-to)
+  );
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
@@ -79,7 +90,11 @@ body {
 }
 
 .btn-primary:hover {
-  background: linear-gradient(to right, var(--btn-primary-hover-from), var(--btn-primary-hover-to));
+  background: linear-gradient(
+    to right,
+    var(--btn-primary-hover-from),
+    var(--btn-primary-hover-to)
+  );
   transform: scale(1.05);
 }
 
@@ -122,4 +137,43 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+.dir-rtl {
+  direction: rtl;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.5) rgba(241, 245, 249, 0.7);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.7);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(59, 130, 246, 0.5);
+  border-radius: 10px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
 }

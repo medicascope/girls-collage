@@ -106,11 +106,11 @@ export default async function DepartmentsPage() {
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="section-container">
-          <div className="text-center">
+          <div className="text-center pt-[120px]">
             <h1 className="text-5xl lg:text-6xl font-bold mb-6">
-              <span className="gradient-text">أقسام الكلية</span>
+              <span className="gradient-text ">أقسام الكلية</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+            <p className=" text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
               تضم كلية البنات الطبية مجموعة من الأقسام الطبية المتخصصة التي تغطي جميع التخصصات الطبية الرئيسية، 
               ويقود كل قسم نخبة من أفضل الأطباء والأكاديميين المتخصصين.
             </p>
