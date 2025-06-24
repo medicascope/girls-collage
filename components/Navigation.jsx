@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { urlFor } from "../lib/sanity";
+import { useRouter } from "next/navigation";
 
 const Navigation = ({ siteSettings }) => {
   // Use Sanity data if available, otherwise fallback
@@ -13,8 +14,9 @@ const Navigation = ({ siteSettings }) => {
     logo: null,
   };
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
 
+  const pathname = usePathname();
+  
   const navItems = [
     { name: "الرئيسية", href: "/" },
     { name: "نبذة عن الكلية", href: "/about" },
@@ -39,9 +41,10 @@ const Navigation = ({ siteSettings }) => {
               />
             ) : (
               <img
+                onClick={() => router.push("/")}
                 src="/logo.jpg"
                 alt="logo"
-                className="w-12 h-12 ml-4 rounded-full object-cover"
+                className="w-12 h-12 ml-4 rounded-lg object-cover cursor-pointer"
               />
             )}
             <div>

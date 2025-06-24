@@ -1,148 +1,119 @@
 export default {
-  name: 'unit',
-  title: 'College Unit',
-  type: 'document',
+  name: "unit",
+  title: "College Unit",
+  type: "document",
   fields: [
     {
-      name: 'name',
-      title: 'Unit Name',
-      type: 'string',
-      validation: Rule => Rule.required()
+      name: "name",
+      title: "Unit Name",
+      type: "string",
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: 'nameEn',
-      title: 'Unit Name (English)',
-      type: 'string'
+      name: "nameEn",
+      title: "Unit Name (English)",
+      type: "string",
     },
     {
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
+      name: "slug",
+      title: "Slug",
+      type: "slug",
       options: {
-        source: 'name',
-        maxLength: 96
+        source: "name",
+        maxLength: 96,
       },
-      validation: Rule => Rule.required()
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: 'description',
-      title: 'Description',
-      type: 'blockContent',
-      validation: Rule => Rule.required()
+      name: "description",
+      title: "Description",
+      type: "blockContent",
+      validation: (Rule) => Rule.required(),
     },
     {
-      name: 'vision',
-      title: 'Vision',
-      type: 'text',
-      rows: 3
+      name: "image",
+      title: "Unit Image",
+      type: "customImage",
     },
     {
-      name: 'mission',
-      title: 'Mission',
-      type: 'text',
-      rows: 3
+      name: "mission",
+      title: "Department Mission",
+      type: "text",
+      rows: 3,
     },
     {
-      name: 'icon',
-      title: 'Icon',
-      type: 'string',
-      description: 'Icon identifier (e.g., trophy, chart, brain, etc.)'
+      name: "facilities",
+      title: "Facilities",
+      type: "array",
+      of: [{ type: "string" }],
     },
     {
-      name: 'image',
-      title: 'Unit Image',
-      type: 'customImage'
+      name: "head",
+      title: "Unit Head",
+      type: "reference",
+      to: [{ type: "staff" }],
     },
     {
-      name: 'head',
-      title: 'Unit Head',
-      type: 'reference',
-      to: [{type: 'staff'}]
+      name: "staff",
+      title: "Unit Staff",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "staff" }] }],
     },
     {
-      name: 'headName',
-      title: 'Head Name (Alternative)',
-      type: 'string',
-      description: 'Use this if not using staff reference'
+      name: "objectives",
+      title: "Objectives",
+      type: "array",
+      of: [{ type: "string" }],
     },
     {
-      name: 'headTitle',
-      title: 'Head Title (Alternative)',
-      type: 'string',
-      description: 'Use this if not using staff reference'
+      name: "committees",
+      title: "Committees",
+      type: "array",
+      of: [{ type: "string" }],
     },
     {
-      name: 'staff',
-      title: 'Unit Staff',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'staff'}]}]
+      name: "services",
+      title: "Services Provided",
+      type: "array",
+      of: [{ type: "string" }],
     },
     {
-      name: 'members',
-      title: 'Number of Members',
-      type: 'number'
+      name: "ourVision",
+      title: "Our Vision",
+      type: "text",
     },
     {
-      name: 'establishedYear',
-      title: 'Established Year',
-      type: 'number'
+      name: "achievements",
+      title: "Key Achievements",
+      type: "array",
+      of: [{ type: "string" }],
     },
     {
-      name: 'objectives',
-      title: 'Objectives',
-      type: 'array',
-      of: [{type: 'string'}]
+      name: "contact",
+      title: "Contact Information",
+      type: "contact",
     },
     {
-      name: 'services',
-      title: 'Services Provided',
-      type: 'array',
-      of: [{type: 'string'}]
+      name: "order",
+      title: "Display Order",
+      type: "number",
     },
     {
-      name: 'activities',
-      title: 'Activities',
-      type: 'array',
-      of: [{type: 'string'}]
+      name: "seo",
+      title: "SEO",
+      type: "seo",
     },
     {
-      name: 'achievements',
-      title: 'Key Achievements',
-      type: 'array',
-      of: [{type: 'string'}]
+      name: "departmentQualityObjectives",
+      title: "Department Quality Objectives",
+      type: "array",
+      of: [{ type: "string" }],
     },
-    {
-      name: 'committees',
-      title: 'Committees',
-      type: 'array',
-      of: [{type: 'string'}]
-    },
-    {
-      name: 'publications',
-      title: 'Publications',
-      type: 'array',
-      of: [{type: 'string'}]
-    },
-    {
-      name: 'contact',
-      title: 'Contact Information',
-      type: 'contact'
-    },
-    {
-      name: 'order',
-      title: 'Display Order',
-      type: 'number'
-    },
-    {
-      name: 'seo',
-      title: 'SEO',
-      type: 'seo'
-    }
   ],
   preview: {
     select: {
-      title: 'name',
-      media: 'image'
-    }
-  }
-} 
+      title: "name",
+      media: "image",
+    },
+  },
+};
