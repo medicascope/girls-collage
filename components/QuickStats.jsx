@@ -1,9 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const QuickStats = ({ heroData }) => {
   const [counts, setCounts] = useState({ students: 0, faculty: 0, departments: 0, hospitals: 0 })
+  const [hasAnimated, setHasAnimated] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef(null)
 
   // Use stats from heroData if available, otherwise fallback
   const fallbackStats = [
@@ -64,29 +67,72 @@ const QuickStats = ({ heroData }) => {
       }))
     : fallbackStats
 
+  // Initialize counts to 0
   useEffect(() => {
-    const animateCounters = () => {
-      stats.forEach(stat => {
-        let current = 0
-        const increment = stat.target / 50
-        const timer = setInterval(() => {
-          current += increment
-          if (current >= stat.target) {
-            current = stat.target
-            clearInterval(timer)
-          }
-          setCounts(prev => ({ ...prev, [stat.key]: Math.floor(current) }))
-        }, 50)
-      })
-    }
-
-    animateCounters()
+    const initialCounts = {}
+    stats.forEach(stat => {
+      initialCounts[stat.key] = 0
+    })
+    setCounts(initialCounts)
   }, [])
 
+  // Intersection Observer for scroll-triggered animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setIsVisible(true)
+          setHasAnimated(true)
+          
+          // Faster counter animation start
+          setTimeout(() => {
+            animateCounters()
+          }, 150)
+        }
+      },
+      {
+        threshold: 0.2, // Trigger when 20% of the section is visible
+        rootMargin: '0px' // Remove margin for earlier triggering
+      }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current)
+      }
+    }
+  }, [hasAnimated])
+
+  const animateCounters = () => {
+    stats.forEach((stat, index) => {
+      let current = 0
+      const increment = stat.target / 60 // Slower animation for smoother effect
+      const timer = setInterval(() => {
+        current += increment
+        if (current >= stat.target) {
+          current = stat.target
+          clearInterval(timer)
+        }
+        setCounts(prev => ({ ...prev, [stat.key]: Math.floor(current) }))
+      }, 30 + (index * 5)) // Staggered timing for each counter
+    })
+  }
+
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
+    <section 
+      ref={sectionRef}
+      className={`py-20 bg-gradient-to-br from-slate-50 to-blue-50 transition-all duration-1000 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
       <div className="section-container">
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 transition-all duration-500 delay-100 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
             <span className="text-black">{heroData?.statisticsTitle || 'الكلية في أرقام'}</span>
           </h2>
@@ -96,20 +142,65 @@ const QuickStats = ({ heroData }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map(stat => (
-            <div key={stat.key} className="text-center group">
-              <div className={`w-24 h-24 bg-gradient-to-r ${stat.gradient} rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg`}>
-                <div className="text-white">
+          {stats.map((stat, index) => (
+            <div 
+              key={stat.key} 
+              className={`text-center group transition-all duration-600 ${
+                isVisible 
+                  ? 'opacity-100 translate-y-0 scale-100' 
+                  : 'opacity-0 translate-y-12 scale-90'
+              }`}
+              style={{ 
+                transitionDelay: `${200 + (index * 100)}ms` 
+              }}
+            >
+              <div className={`w-24 h-24 bg-gradient-to-r ${stat.gradient} rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg relative overflow-hidden`}>
+                {/* Animated background pulse */}
+                <div className={`absolute inset-0 bg-gradient-to-r ${stat.gradient} rounded-full opacity-0 group-hover:opacity-30 animate-pulse`}></div>
+                
+                {/* Icon with entrance animation */}
+                <div className={`text-white relative z-10 transition-all duration-500 ${
+                  isVisible ? 'rotate-0 scale-100' : 'rotate-45 scale-75'
+                }`}>
                   {stat.icon}
                 </div>
               </div>
-              <div className="text-4xl lg:text-5xl font-bold text-gray-800 mb-2">
-                {counts[stat.key].toLocaleString()}+
+              
+              {/* Animated counter */}
+              <div className="text-4xl lg:text-5xl font-bold text-gray-800 mb-2 relative">
+                <span className={`inline-block transition-all duration-300 ${
+                  counts[stat.key] > 0 ? 'animate-pulse' : ''
+                }`}>
+                  {counts[stat.key].toLocaleString()}
+                </span>
+                <span className="text-3xl">+</span>
+                
+                {/* Number increase effect */}
+                {counts[stat.key] > 0 && (
+                  <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full opacity-50 text-sm font-normal text-green-500 animate-bounce">
+                      +{Math.floor(counts[stat.key] / 10)}
+                    </div>
+                  </div>
+                )}
               </div>
+              
               <div className="text-lg text-gray-600 font-medium">
                 {stat.label}
               </div>
-              <div className="w-16 h-1 bg-gradient-to-r from-blue-600 to-purple-600 mx-auto mt-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              {/* Animated progress bar */}
+              <div className="relative w-16 h-1 bg-gray-200 mx-auto mt-4 rounded-full overflow-hidden">
+                                 <div 
+                   className={`absolute top-0 left-0 h-full bg-gradient-to-r ${stat.gradient} rounded-full transition-all duration-800 ease-out ${
+                     isVisible ? 'w-full' : 'w-0'
+                   }`}
+                   style={{ transitionDelay: `${350 + (index * 100)}ms` }}
+                ></div>
+              </div>
+              
+              {/* Hover glow effect */}
+              <div className="absolute inset-0 -z-10 bg-gradient-to-r from-transparent via-blue-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl blur-xl transform group-hover:scale-110"></div>
             </div>
           ))}
         </div>

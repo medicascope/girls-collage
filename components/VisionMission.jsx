@@ -1,6 +1,36 @@
+'use client'
+
+import { useState, useEffect, useRef } from 'react'
 import PortableText from './PortableText'
 
 const VisionMission = ({ visionMissionData }) => {
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef(null)
+
+  // Intersection Observer for scroll-triggered animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '-50px'
+      }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current)
+      }
+    }
+  }, [])
   // Fallback data if Sanity data is not available
   const data = visionMissionData || {
     sectionTitle: 'رؤيتنا ورسالتنا',
@@ -35,9 +65,16 @@ const VisionMission = ({ visionMissionData }) => {
     }
   }
   return (
-    <section className="py-20 bg-white">
+    <section 
+      ref={sectionRef}
+      className={`py-20 bg-white transition-all duration-1000 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
       <div className="section-container">
-        <div className="text-center mb-16">
+        <div className={`text-center mb-16 transition-all duration-700 delay-200 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
             <span className="text-black">{data.sectionTitle}</span>
           </h2>
@@ -48,7 +85,9 @@ const VisionMission = ({ visionMissionData }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Vision */}
-          <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-2xl card-shadow">
+          <div className={`bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-2xl card-shadow transition-all duration-700 delay-300 ${
+            isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-12 scale-95'
+          }`}>
             <div className="flex items-center mb-6">
               <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-red-600 rounded-full flex items-center justify-center ml-4">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +111,9 @@ const VisionMission = ({ visionMissionData }) => {
           </div>
 
           {/* Mission */}
-          <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-2xl card-shadow">
+          <div className={`bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-2xl card-shadow transition-all duration-700 delay-500 ${
+            isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'
+          }`}>
             <div className="flex items-center mb-6">
               <div className="w-12 h-12 bg-gradient-to-r from-red-600 to-blue-600 rounded-full flex items-center justify-center ml-4">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,7 +137,9 @@ const VisionMission = ({ visionMissionData }) => {
         </div>
 
         {/* Values */}
-        <div className="mt-16">
+        <div className={`mt-16 transition-all duration-700 delay-700 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+        }`}>
           <h3 className="text-3xl font-bold text-center mb-12 text-gray-800">{data.values.title}</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {data.values.valuesList?.map((value, index) => {
@@ -111,7 +154,13 @@ const VisionMission = ({ visionMissionData }) => {
               }
               
               return (
-                <div key={index} className="text-center group">
+                <div 
+                  key={index} 
+                  className={`text-center group transition-all duration-700 ${
+                    isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-90'
+                  }`}
+                  style={{ transitionDelay: `${900 + (index * 200)}ms` }}
+                >
                   <div className={`w-16 h-16 bg-gradient-to-r ${getGradientClass(value.color)} rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
                     <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       {index === 0 && (

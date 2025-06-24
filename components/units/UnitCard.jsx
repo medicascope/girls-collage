@@ -34,8 +34,6 @@ const extractText = (content) => {
 export default function UnitCard({ unit }) {
   if (!unit) return null;
 
-  console.log(unit)
-
   // Safely extract text values
   const unitName = extractText(unit?.name) || 'وحدة بدون اسم';
   const unitDescription = extractText(unit?.description) || 'لا يوجد وصف';
