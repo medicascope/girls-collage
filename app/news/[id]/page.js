@@ -1,31 +1,60 @@
+import { notFound } from 'next/navigation'
 import NewsDetail from '../../../components/NewsDetail'
 import Navigation from '../../../components/Navigation'
+import Footer from '../../../components/Footer'
+import { sanityFetch, queries } from '../../../lib/sanity'
 
 export async function generateMetadata({ params }) {
   const { id } = await params
   
-  // This would typically fetch from a database or API
-  const newsData = {
-    1: { title: 'كلية البنات الطبية تحتفل بتخريج الدفعة الجديدة', description: 'احتفلت كلية البنات الطبية بتخريج 150 طالبة من مختلف التخصصات الطبية' },
-    2: { title: 'إطلاق برنامج التعليم الطبي التكاملي الجديد', description: 'أطلقت كلية البنات الطبية برنامجاً جديداً للتعليم الطبي التكاملي' }
-  }
+  const news = await sanityFetch({
+    query: `*[_type == "news" && slug.current == $slug][0]{
+      title,
+      excerpt
+    }`,
+    params: { slug: id }
+  })
   
-  const news = newsData[id] || { title: 'الأخبار', description: 'أخبار كلية البنات الطبية' }
+  if (!news) {
+    return {
+      title: 'خبر غير موجود - كلية البنات الطبية'
+    }
+  }
   
   return {
     title: `${news.title} - كلية البنات الطبية`,
-    description: news.description
+    description: news.excerpt || `اقرأ خبر ${news.title} في كلية البنات الطبية`
   }
 }
 
 export default async function NewsDetailPage({ params }) {
   const { id } = await params
+  
+  // Fetch news data and related news from Sanity
+  const [newsData, relatedNews, siteSettings] = await Promise.all([
+    sanityFetch({
+      query: queries.singleNews,
+      params: { slug: id }
+    }),
+    sanityFetch({
+      query: queries.relatedNews,
+      params: { slug: id }
+    }),
+    sanityFetch({ query: queries.siteSettings })
+  ])
+
+  // If news not found, return 404
+  if (!newsData) {
+    notFound()
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
-      <Navigation />
+      <Navigation siteSettings={siteSettings} />
       <main className="pt-20">
-        <NewsDetail slug={id} />
+        <NewsDetail newsData={newsData} relatedNews={relatedNews} />
       </main>
+      <Footer siteSettings={siteSettings} />
     </div>
   )
 } 

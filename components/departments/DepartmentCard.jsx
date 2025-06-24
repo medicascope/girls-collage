@@ -80,7 +80,7 @@ const DepartmentCard = ({ department }) => {
     image: getImageUrl(department.image),
     color: department.color || "from-blue-600 to-blue-800",
     id: department._id || department.id || Math.random(),
-    slug: department.slug?.current || department.slug || department._id || 'unknown'
+    slug: department.slug?.current || department.slug || department._id || department.id || department.name || 'unknown'
   };
 
   return (

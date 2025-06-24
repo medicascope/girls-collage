@@ -119,27 +119,12 @@ const NewsListing = ({ newsData }) => {
   ]
   
   // Use Sanity data if available, otherwise use fallback
-  // Ensure all items have unique IDs
-  const processNewsData = (data) => {
-    if (!data || !Array.isArray(data)) return fallbackNews
-    
-    return data.map((item, index) => ({
-      ...item,
-      // Ensure unique ID - use existing id, _id (Sanity), or generate from index
-      id: item.id || item._id || `news-${index}`,
-      // Ensure slug exists - use existing slug or create from ID
-      slug: item.slug || { current: item.id || item._id || `news-${index}` },
-      // Ensure required fields exist
-      title: item.title || 'عنوان غير محدد',
-      excerpt: item.excerpt || item.description || 'لا يوجد وصف',
-      category: item.category || 'عام',
-      date: item.date || item.publishedAt || item._createdAt || new Date().toISOString(),
-      author: item.author || 'غير محدد',
-      image: item.image || '/images/news/default.jpg'
-    }))
-  }
-  
-  const newsItems = processNewsData(newsData)
+  const newsItems = useMemo(() => {
+    if (newsData && newsData.length > 0) {
+      return newsData
+    }
+    return fallbackNews
+  }, [newsData])
   
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('الكل')
@@ -171,33 +156,14 @@ const NewsListing = ({ newsData }) => {
   const formatDate = (dateString) => {
     if (!dateString) return 'غير محدد'
     
-    let date
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return 'غير محدد'
     
-    // Handle different date formats that might come from Sanity
-    if (typeof dateString === 'string') {
-      // Handle ISO date strings or regular date strings
-      date = new Date(dateString)
-    } else if (dateString instanceof Date) {
-      date = dateString
-    } else {
-      return 'غير محدد'
-    }
-    
-    // Check if date is valid
-    if (isNaN(date.getTime())) {
-      return 'غير محدد'
-    }
-    
-    const day = date.getDate()
-    const month = date.getMonth() + 1
-    const year = date.getFullYear()
-    
-    // Ensure we have valid numbers
-    if (isNaN(day) || isNaN(month) || isNaN(year)) {
-      return 'غير محدد'
-    }
-    
-    return `${day}/${month}/${year}`
+    return date.toLocaleDateString('ar-EG', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
   }
 
   return (
@@ -237,8 +203,8 @@ const NewsListing = ({ newsData }) => {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+              {categories.map((category, index) => (
+                <option key={category || index} value={category}>{category}</option>
               ))}
             </select>
           </div>
@@ -260,12 +226,16 @@ const NewsListing = ({ newsData }) => {
       {/* News Grid */}
       {currentNews.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {currentNews.map((news) => (
-            <article key={news.id} className="bg-white rounded-xl card-shadow overflow-hidden group hover:shadow-lg transition-shadow duration-300">
+          {currentNews.map((news, index) => (
+            <article key={news.id || index} className="bg-white rounded-xl card-shadow overflow-hidden group hover:shadow-lg transition-shadow duration-300">
               <div className="relative h-48 overflow-hidden">
-                <img
-                  src={news.image}
-                  alt={news.title}
+                                    <img
+                      src={
+                        news.image?.asset 
+                          ? urlFor(news.image).width(400).height(300).url()
+                          : news.image || "data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='16' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eصورة الخبر%3C/text%3E%3C/svg%3E"
+                      }
+                      alt={news.image?.alt || news.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {
                     e.currentTarget.src = "data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='16' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eصورة الخبر%3C/text%3E%3C/svg%3E"
@@ -284,7 +254,7 @@ const NewsListing = ({ newsData }) => {
                     <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    {formatDate(news.date)}
+                                            {formatDate(news.publishedAt || news.date)}
                   </div>
                   <span className="text-xs">{news.author}</span>
                 </div>
@@ -298,7 +268,7 @@ const NewsListing = ({ newsData }) => {
                 </p>
 
                 <Link
-                  href={`/news/${news.id}`}
+                  href={`/news/${news.slug?.current || news.id}`}
                   className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors duration-300"
                 >
                   اقرأ المزيد
@@ -332,9 +302,9 @@ const NewsListing = ({ newsData }) => {
           </button>
 
           <div className="flex space-x-1 space-x-reverse">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page, index) => (
               <button
-                key={page}
+                key={page || index}
                 onClick={() => setCurrentPage(page)}
                 className={`px-4 py-2 rounded-xl ml-[5px] mr-0 transition-all duration-200 cursor-pointer ${
                   currentPage === page
