@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -7,6 +8,33 @@ import { urlFor } from '../lib/sanity'
 import PortableText from './PortableText'
 
 const DeanMessage = ({ deanMessageData }) => {
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef(null)
+
+  // Intersection Observer for scroll-triggered animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '-50px'
+      }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current)
+      }
+    }
+  }, [])
   // Fallback data if Sanity data is not available
   const data = deanMessageData || {
     title: 'كلمة معالي العميدة',
@@ -17,11 +45,18 @@ const DeanMessage = ({ deanMessageData }) => {
     fullMessage: null
   }
   return (
-    <section className="py-20 bg-white">
+    <section 
+      ref={sectionRef}
+      className={`py-20 bg-white transition-all duration-1000 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
       <div className="section-container">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Image Side */}
-          <div className="relative">
+          <div className={`relative transition-all duration-700 delay-200 ${
+            isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-12 scale-95'
+          }`}>
             <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden card-shadow">
               <img
                 src={data.deanImage?.asset ? urlFor(data.deanImage).width(500).height(600).url() : "https://d31nhj1t453igc.cloudfront.net/cloudinary/2022/Apr/08/imOSR3BLBDw2Xckl2c4R.jpg"}
@@ -39,7 +74,9 @@ const DeanMessage = ({ deanMessageData }) => {
           </div>
 
           {/* Content Side */}
-          <div className="space-y-6">
+          <div className={`space-y-6 transition-all duration-700 delay-400 ${
+            isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'
+          }`}>
             <div>
               <h2 className="text-4xl lg:text-5xl font-bold mb-4">
                 <span className="text-black">{data.title}</span>

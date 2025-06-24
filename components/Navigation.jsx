@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { urlFor } from "../lib/sanity";
 import { useRouter } from "next/navigation";
@@ -13,8 +14,9 @@ const Navigation = ({ siteSettings }) => {
     logo: null,
   };
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
 
+  const pathname = usePathname();
+  
   const navItems = [
     { name: "الرئيسية", href: "/" },
     { name: "نبذة عن الكلية", href: "/about" },
@@ -26,7 +28,7 @@ const Navigation = ({ siteSettings }) => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg bg-white/80 border-b border-white/20">
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-lg bg-white/75">
       <div className="section-container ">
         <div className="flex justify-between items-center py-5">
           {/* Logo Section */}
@@ -35,7 +37,7 @@ const Navigation = ({ siteSettings }) => {
               <img
                 src={urlFor(settings.logo).width(48).height(48).url()}
                 alt={settings.logo.alt || settings.title}
-                className="w-12 h-12 ml-4 rounded-lg object-cover"
+                className="w-12 h-12 ml-4 rounded-full object-cover"
               />
             ) : (
               <img
@@ -57,16 +59,27 @@ const Navigation = ({ siteSettings }) => {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-reverse space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="relative text-gray-700 hover:text-gray-900 transition-colors duration-200 font-medium text-sm py-2 px-1 group mr-[28px]"
-              >
-                {item.name}
-                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900 transform scale-x-0 transition-transform duration-200 group-hover:scale-x-100 origin-left"></span>
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`relative transition-colors duration-200 font-medium text-sm py-2 px-1 group mr-[28px] ${
+                    isActive 
+                      ? 'text-gray-900' 
+                      : 'text-gray-700 hover:text-gray-900'
+                  }`}
+                >
+                  {item.name}
+                  <span className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gray-900 transform transition-transform duration-200 origin-left ${
+                    isActive 
+                      ? 'scale-x-100' 
+                      : 'scale-x-0 group-hover:scale-x-100'
+                  }`}></span>
+                </Link>
+              )
+            })}
           </div>
 
           {/* Mobile menu button */}
@@ -97,16 +110,23 @@ const Navigation = ({ siteSettings }) => {
         >
           <div className="border-t border-white/30 pt-4">
             <div className="space-y-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="block py-3 px-4 text-gray-700 hover:text-gray-900 hover:bg-white/50 rounded-lg transition-all duration-200 font-medium"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`block py-3 px-4 rounded-full transition-all duration-200 font-medium ${
+                      isActive 
+                        ? 'text-gray-900 bg-white/70' 
+                        : 'text-gray-700 hover:text-gray-900 hover:bg-white/50'
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                )
+              })}
             </div>
           </div>
         </div>

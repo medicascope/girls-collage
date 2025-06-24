@@ -1,10 +1,38 @@
 'use client'
 
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { urlFor } from '../lib/sanity'
 
 const LatestNews = ({ newsData }) => {
+  const [isVisible, setIsVisible] = useState(false)
+  const sectionRef = useRef(null)
+
+  // Intersection Observer for scroll-triggered animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      {
+        threshold: 0.2,
+        rootMargin: '-50px'
+      }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current)
+      }
+    }
+  }, [])
   // Fallback news data if Sanity data is not available
   const fallbackNews = [
     {
@@ -70,9 +98,16 @@ const LatestNews = ({ newsData }) => {
   }
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+    <section 
+      ref={sectionRef}
+      className={`py-20 bg-gradient-to-br from-gray-50 to-white transition-all duration-1000 ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      }`}
+    >
       <div className="section-container">
-        <div className="text-center ">
+        <div className={`text-center mb-16 transition-all duration-700 delay-200 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
           <h2 className="text-4xl lg:text-5xl font-bold mb-6">
             <span className="gradient-text">آخر الأخبار</span>
           </h2>
@@ -83,7 +118,13 @@ const LatestNews = ({ newsData }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {newsItems.map((news, index) => (
-            <article key={news._id || news.id || index} className="bg-white rounded-xl card-shadow overflow-hidden group">
+            <article 
+              key={news._id || news.id || index} 
+              className={`bg-white rounded-xl card-shadow overflow-hidden group transition-all duration-700 ${
+                isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-90'
+              }`}
+              style={{ transitionDelay: `${400 + (index * 150)}ms` }}
+            >
               <div className="relative h-48 overflow-hidden">
                 <img
                   src={news.featuredImage?.asset ? urlFor(news.featuredImage).width(400).height(300).url() : news.image || "data:image/svg+xml,%3Csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='16' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eصورة الخبر%3C/text%3E%3C/svg%3E"}
@@ -130,7 +171,9 @@ const LatestNews = ({ newsData }) => {
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className={`text-center mt-12 transition-all duration-700 delay-1000 ${
+          isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
+        }`}>
           <Link href="/news" className="btn-primary">
             عرض جميع الأخبار
           </Link>

@@ -15,7 +15,7 @@ export default async function Home() {
     sanityFetch({ query: queries.visionMission }),
     sanityFetch({ query: queries.latestNews }),
     sanityFetch({ query: queries.deanMessage }),
-    sanityFetch({ query: queries.featuredGalleries }),
+    sanityFetch({ query: queries.allGalleries }),
     sanityFetch({ query: queries.siteSettings })
   ])
 
