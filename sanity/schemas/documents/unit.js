@@ -66,6 +66,12 @@ export default {
       of: [{ type: "string" }],
     },
     {
+      name: "committees",
+      title: "Committees",
+      type: "array",
+      of: [{ type: "string" }],
+    },
+    {
       name: "services",
       title: "Services Provided",
       type: "array",

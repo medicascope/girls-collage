@@ -6,36 +6,8 @@ import Link from 'next/link'
 import { urlFor } from '../lib/sanity'
 
 const NewsListing = ({ newsData }) => {
-  // Fallback news data if Sanity data is not available
+  // Comprehensive fallback news data if Sanity data is not available
   const fallbackNews = [
-    {
-      id: 1,
-      title: 'افتتاح معمل المحاكاة الطبية المتقدم',
-      excerpt: 'تم افتتاح معمل جديد للمحاكاة الطبية مزود بأحدث التقنيات العالمية لتدريب الطالبات على أفضل المعايير الطبية.',
-      image: '/images/news/simulation-lab.jpg',
-      date: '2024-01-15',
-      category: 'تطوير التعليم',
-      isFeature: true
-    },
-    {
-      id: 2,
-      title: 'توقيع اتفاقية تعاون مع جامعة هارفارد الطبية',
-      excerpt: 'وقعت الكلية اتفاقية شراكة استراتيجية مع جامعة هارفارد لتبادل الخبرات والأبحاث العلمية.',
-      image: '/images/news/harvard-agreement.jpg',
-      date: '2024-01-10',
-      category: 'شراكات دولية',
-      isFeature: false
-    }
-  ]
-  
-  // Use Sanity data if available, otherwise use fallback
-  const newsArticles = newsData || fallbackNews
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('الكل')
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 9
-
-  const newsItems = [
     {
       id: 1,
       title: 'كلية البنات الطبية تحتفل بتخريج الدفعة الجديدة',
@@ -58,6 +30,7 @@ const NewsListing = ({ newsData }) => {
     },
     {
       id: 3,
+
       title: 'توقيع اتفاقية تعاون مع مستشفى الملك فهد',
       excerpt: 'وقعت كلية البنات الطبية اتفاقية تعاون استراتيجي مع مستشفى الملك فهد لتدريب الطالبات وتطوير البحث العلمي في المجال الطبي.',
       content: 'في خطوة مهمة نحو تعزيز التعاون الأكاديمي والطبي، وقعت كلية البنات الطبية اتفاقية تعاون استراتيجي مع مستشفى الملك فهد. الاتفاقية تشمل تدريب الطالبات في المستشفى، تبادل الخبرات، والتعاون في البحث العلمي...',
@@ -68,6 +41,7 @@ const NewsListing = ({ newsData }) => {
     },
     {
       id: 4,
+
       title: 'فوز أبحاث الكلية بجائزة التميز العلمي',
       excerpt: 'حصلت ثلاثة أبحاث من كلية البنات الطبية على جائزة التميز العلمي على مستوى الجامعات السعودية لهذا العام في مجال الطب والعلوم الصحية.',
       content: 'حققت كلية البنات الطبية إنجازاً علمياً متميزاً بحصول ثلاثة من أبحاثها على جائزة التميز العلمي على مستوى الجامعات السعودية. الأبحاث الفائزة تناولت مواضيع متقدمة في الطب والعلوم الصحية وساهمت في تطوير المعرفة الطبية...',
@@ -78,6 +52,7 @@ const NewsListing = ({ newsData }) => {
     },
     {
       id: 5,
+
       title: 'ورشة عمل حول الذكاء الاصطناعي في الطب',
       excerpt: 'نظمت وحدة التعليم الإلكتروني ورشة عمل متخصصة حول استخدام الذكاء الاصطناعي في التشخيص الطبي والعلاج بمشاركة خبراء دوليين.',
       content: 'استضافت كلية البنات الطبية ورشة عمل متخصصة حول تطبيقات الذكاء الاصطناعي في المجال الطبي. الورشة التي نظمتها وحدة التعليم الإلكتروني، شهدت مشاركة خبراء من داخل وخارج المملكة وتناولت أحدث التطورات في هذا المجال...',
@@ -88,6 +63,7 @@ const NewsListing = ({ newsData }) => {
     },
     {
       id: 6,
+
       title: 'افتتاح معمل المحاكاة الطبية المتطور',
       excerpt: 'افتتحت الكلية معمل المحاكاة الطبية الجديد المزود بأحدث التقنيات لتدريب الطالبات على المهارات السريرية في بيئة آمنة ومحاكية للواقع.',
       content: 'في إطار تطوير البنية التحتية التعليمية، افتتحت كلية البنات الطبية معمل المحاكاة الطبية المتطور الذي يضم أحدث تقنيات المحاكاة الطبية. المعمل يوفر بيئة تدريبية متقدمة تمكن الطالبات من اكتساب المهارات السريرية بطريقة آمنة وفعالة...',
@@ -98,6 +74,7 @@ const NewsListing = ({ newsData }) => {
     },
     {
       id: 7,
+
       title: 'مؤتمر الطب النسائي السنوي الخامس',
       excerpt: 'تستضيف الكلية المؤتمر السنوي الخامس للطب النسائي بمشاركة أطباء وباحثين من مختلف دول العالم لمناقشة أحدث التطورات في هذا المجال.',
       content: 'تستعد كلية البنات الطبية لاستضافة المؤتمر السنوي الخامس للطب النسائي الذي يعتبر من أهم المؤتمرات المتخصصة في المنطقة. المؤتمر يشهد مشاركة واسعة من الأطباء والباحثين والأكاديميين من مختلف دول العالم...',
@@ -108,6 +85,7 @@ const NewsListing = ({ newsData }) => {
     },
     {
       id: 8,
+
       title: 'برنامج التبادل الطلابي مع جامعة هارفارد',
       excerpt: 'أطلقت الكلية برنامج تبادل طلابي مع كلية الطب بجامعة هارفارد يتيح للطالبات المتميزات فرصة الدراسة والتدريب في إحدى أعرق الجامعات العالمية.',
       content: 'في خطوة نحو التميز الأكاديمي والانفتاح على التجارب العالمية، أطلقت كلية البنات الطبية برنامج تبادل طلابي مع كلية الطب بجامعة هارفارد الأمريكية. البرنامج يوفر فرصاً استثنائية للطالبات المتميزات للاستفادة من الخبرات العالمية...',
@@ -118,6 +96,7 @@ const NewsListing = ({ newsData }) => {
     },
     {
       id: 9,
+
       title: 'حملة التوعية الصحية في المجتمع',
       excerpt: 'تنظم طالبات الكلية حملة توعية صحية شاملة في المجتمع المحلي تركز على الوقاية من الأمراض المزمنة وتعزيز نمط الحياة الصحي.',
       content: 'في إطار رسالة الكلية المجتمعية، تنظم طالبات كلية البنات الطبية حملة توعية صحية شاملة تستهدف المجتمع المحلي. الحملة تركز على رفع الوعي حول الوقاية من الأمراض المزمنة وتعزيز أنماط الحياة الصحية...',
@@ -128,6 +107,7 @@ const NewsListing = ({ newsData }) => {
     },
     {
       id: 10,
+
       title: 'تطوير منصة التعليم الإلكتروني الذكية',
       excerpt: 'أطلقت الكلية منصة تعليم إلكتروني ذكية جديدة تستخدم تقنيات الذكاء الاصطناعي لتوفير تجربة تعليمية مخصصة لكل طالبة.',
       content: 'واكبت كلية البنات الطبية التطور التكنولوجي بإطلاق منصة تعليم إلكتروني ذكية تستخدم تقنيات الذكاء الاصطناعي. المنصة توفر تجربة تعليمية مخصصة ومتكيفة مع احتياجات كل طالبة وتساعد في تحسين نتائج التعلم...',
@@ -137,17 +117,50 @@ const NewsListing = ({ newsData }) => {
       author: 'وحدة التعليم الإلكتروني'
     }
   ]
+  
+  // Use Sanity data if available, otherwise use fallback
+  // Ensure all items have unique IDs
+  const processNewsData = (data) => {
+    if (!data || !Array.isArray(data)) return fallbackNews
+    
+    return data.map((item, index) => ({
+      ...item,
+      // Ensure unique ID - use existing id, _id (Sanity), or generate from index
+      id: item.id || item._id || `news-${index}`,
+      // Ensure slug exists - use existing slug or create from ID
+      slug: item.slug || { current: item.id || item._id || `news-${index}` },
+      // Ensure required fields exist
+      title: item.title || 'عنوان غير محدد',
+      excerpt: item.excerpt || item.description || 'لا يوجد وصف',
+      category: item.category || 'عام',
+      date: item.date || item.publishedAt || item._createdAt || new Date().toISOString(),
+      author: item.author || 'غير محدد',
+      image: item.image || '/images/news/default.jpg'
+    }))
+  }
+  
+  const newsItems = processNewsData(newsData)
+  
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('الكل')
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 9
 
   const categories = ['الكل', 'أخبار الكلية', 'البرامج التعليمية', 'الشراكات', 'البحث العلمي', 'الفعاليات', 'التطوير', 'المؤتمرات', 'الخدمة المجتمعية', 'التكنولوجيا']
 
   const filteredNews = useMemo(() => {
     return newsItems.filter(news => {
-      const matchesSearch = news.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           news.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesCategory = selectedCategory === 'الكل' || news.category === selectedCategory
+      // Safe search with fallback for undefined properties
+      const title = news.title || ''
+      const excerpt = news.excerpt || ''
+      const category = news.category || ''
+      
+      const matchesSearch = title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           excerpt.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = selectedCategory === 'الكل' || category === selectedCategory
       return matchesSearch && matchesCategory
     })
-  }, [searchTerm, selectedCategory])
+  }, [searchTerm, selectedCategory, newsItems])
 
   const totalPages = Math.ceil(filteredNews.length / itemsPerPage)
   const currentNews = filteredNews.slice(
@@ -156,10 +169,34 @@ const NewsListing = ({ newsData }) => {
   )
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString)
+    if (!dateString) return 'غير محدد'
+    
+    let date
+    
+    // Handle different date formats that might come from Sanity
+    if (typeof dateString === 'string') {
+      // Handle ISO date strings or regular date strings
+      date = new Date(dateString)
+    } else if (dateString instanceof Date) {
+      date = dateString
+    } else {
+      return 'غير محدد'
+    }
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return 'غير محدد'
+    }
+    
     const day = date.getDate()
     const month = date.getMonth() + 1
     const year = date.getFullYear()
+    
+    // Ensure we have valid numbers
+    if (isNaN(day) || isNaN(month) || isNaN(year)) {
+      return 'غير محدد'
+    }
+    
     return `${day}/${month}/${year}`
   }
 
