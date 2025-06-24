@@ -11,7 +11,7 @@ const components = {
       
       return (
         <div className="my-8">
-          <Image
+          <img
             src={urlFor(value).width(800).height(600).url()}
             alt={value.alt || 'Image'}
             width={800}

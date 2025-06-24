@@ -36,30 +36,25 @@ export default function UnitsOverview({ units }) {
     "Units staff arrays:",
     units.map((unit) => unit.staff)
   );
-  // Calculate totals with safe defaults
+  // Calculate totals with safe defaults using actual schema fields
   const totalMembers = units.reduce((sum, unit) => {
     // Count staff array length + 1 if head exists
     const staffCount = Array.isArray(unit.staff) ? unit.staff.length : 0;
     const headCount = unit.head ? 1 : 0;
     return sum + staffCount + headCount;
   }, 0);
-  const totalPublications = units.reduce(
-    (sum, unit) => sum + (unit?.publications?.length || 0),
+  const totalServices = units.reduce(
+    (sum, unit) => sum + (unit?.services?.length || 0),
     0
   );
   const totalCommittees = units.reduce(
     (sum, unit) => sum + (unit?.committees?.length || 0),
     0
   );
-  const avgEstablishedYear =
-    units.length > 0
-      ? Math.round(
-          units.reduce(
-            (sum, unit) => sum + (unit?.establishedYear || 2020),
-            0
-          ) / units.length
-        )
-      : 2020;
+  const totalFacilities = units.reduce(
+    (sum, unit) => sum + (unit?.facilities?.length || 0),
+    0
+  );
 
   const stats = [
     {
@@ -77,9 +72,9 @@ export default function UnitsOverview({ units }) {
       bgColor: "from-green-50 to-green-100",
     },
     {
-      title: "إجمالي المنشورات",
-      value: totalPublications,
-      icon: "books",
+      title: "إجمالي الخدمات",
+      value: totalServices,
+      icon: "lightning",
       color: "from-purple-600 to-purple-700",
       bgColor: "from-purple-50 to-purple-100",
     },
@@ -141,76 +136,6 @@ export default function UnitsOverview({ units }) {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Units by Category */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-          <div className="bg-white p-8 rounded-2xl shadow-xl">
-            <h3 className="text-2xl font-bold mb-6">
-              <span className="gradient-text">وحدات الجودة والتطوير</span>
-            </h3>
-            <div className="space-y-4">
-              {units
-                .filter((unit) =>
-                  [
-                    "وحدة ضمان الجودة والاعتماد الأكاديمي",
-                    "وحدة القياس والتقويم",
-                  ].includes(extractText(unit?.name))
-                )
-                .map((unit, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center space-x-3 space-x-reverse p-4 bg-blue-50 rounded-lg"
-                  >
-                    <div className="ml-[5px] mr-0">
-                      <UnitIcon iconType={unit?.icon} className="w-8 h-8" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-gray-800">
-                        {extractText(unit?.name)}
-                      </h4>
-                      <p className="text-gray-600 text-sm">
-                        {unit?.members || 0} عضو
-                      </p>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-
-          <div className="bg-white p-8 rounded-2xl shadow-xl">
-            <h3 className="text-2xl font-bold mb-6">
-              <span className="gradient-text">وحدات التعليم والتدريب</span>
-            </h3>
-            <div className="space-y-4">
-              {units
-                .filter((unit) =>
-                  [
-                    "وحدة التعليم الطبي المتكامل",
-                    "وحدة التعلم الإلكتروني",
-                    "مختبر المهارات الطبية",
-                  ].includes(extractText(unit?.name))
-                )
-                .map((unit, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center space-x-3 space-x-reverse p-4 bg-green-50 rounded-lg"
-                  >
-                    <div className="ml-[5px] mr-0">
-                      <UnitIcon iconType={unit?.icon} className="w-8 h-8" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-gray-800">
-                        {extractText(unit?.name)}
-                      </h4>
-                      <p className="text-gray-600 text-sm">
-                        {unit?.members || 0} عضو
-                      </p>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
         </div>
 
         {/* Why Choose Our Units */}

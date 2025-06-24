@@ -1,4 +1,6 @@
-import UnitIcon from './UnitIcon'
+import Link from 'next/link';
+import { urlFor } from '../../lib/sanity';
+import { PortableText } from '@portabletext/react';
 
 // Utility function to safely extract text from Portable Text or return plain text
 const extractText = (content) => {
@@ -31,207 +33,229 @@ const extractText = (content) => {
   return '';
 };
 
+// Helper function to get image URL with fallback
+const getImageUrl = (image) => {
+  if (image && image.asset) {
+    return urlFor(image).width(800).height(600).url();
+  }
+  return "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='24' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eوحدة الكلية%3C/text%3E%3C/svg%3E";
+};
+
 export default function UnitCard({ unit }) {
   if (!unit) return null;
 
-  // Safely extract text values
-  const unitName = extractText(unit?.name) || 'وحدة بدون اسم';
-  const unitDescription = extractText(unit?.description) || 'لا يوجد وصف';
-  const unitVision = extractText(unit?.vision) || 'لا توجد رؤية محددة';
-  const unitMission = extractText(unit?.mission) || 'لا توجد رسالة محددة';
-  const headName = extractText(unit?.headName) || 'غير محدد';
-  const headTitle = extractText(unit?.headTitle) || 'غير محدد';
+  // Use schema fields with safe extraction
+  const safeData = {
+    name: unit?.name || 'وحدة غير محددة',
+    nameEn: unit?.nameEn || '',
+    description: extractText(unit?.description) || 'وصف غير متوفر',
+    vision: unit?.ourVision || 'رؤية غير متوفرة', 
+    mission: unit?.mission || 'رسالة غير متوفرة',
+    headName: unit?.head?.name || 'غير محدد',
+    headTitle: unit?.head?.position || 'غير محدد',
+    headPhoto: unit?.head?.photo,
+    image: getImageUrl(unit?.image),
+    staffCount: unit?.staff?.length || 0,
+    committeesCount: unit?.committees?.length || 0,
+    servicesCount: unit?.services?.length || 0,
+    facilitiesCount: unit?.facilities?.length || 0,
+    slug: unit?.slug?.current || unit?.id,
+  };
+  
+  const unitUrl = safeData.slug ? `/units/${safeData.slug}` : '#';
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300">
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white ">
-        <div className="flex items-center space-x-4 space-x-reverse">
-          <div>
-            <h3 className="text-2xl font-bold mb-2">{unitName}</h3>
-            <p className="opacity-90">{unitDescription}</p>
-          </div>
-        </div>
-        
-        {/* Quick Stats */}
-        <div className="mt-6 grid grid-cols-3 gap-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold ">{unit?.members || 0}</div>
-            <div className="text-sm opacity-80">عضو</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold">{unit?.establishedYear || 'غير محدد'}</div>
-            <div className="text-sm opacity-80">تأسس</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold">{unit?.publications?.length || 0}</div>
-            <div className="text-sm opacity-80">منشور</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-8">
-        {/* Head Information */}
-        <div className="mb-8 bg-gray-50 p-6 rounded-xl">
-          <h4 className="font-bold text-gray-800 mb-3">رئيس الوحدة</h4>
-          <div className="flex items-center space-x-3 space-x-reverse">
-            <div className="w-12 h-12 mr-0 ml-[5px] bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-              {headName.charAt(2) || 'ن'}
+    <Link href={unitUrl} className="block">
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer group">
+        {/* Header with Image */}
+        <div className="relative h-48">
+          <img
+            src={safeData.image}
+            alt={safeData.name}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.src = getImageUrl(null);
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-blue-800/60 to-purple-900/70"></div>
+          <div className="absolute inset-0 flex items-start p-6">
+            <div className="text-white">
+              <h3 className="text-2xl font-bold mb-2 group-hover:text-yellow-200 transition-colors">
+                {safeData.name}
+              </h3>
+              {safeData.nameEn && (
+                <p className="text-lg opacity-90 mb-2">{safeData.nameEn}</p>
+              )}
+              <p className="opacity-90 line-clamp-3 leading-relaxed">
+                {safeData.description}
+              </p>
             </div>
-            <div>
-              <p className="font-bold text-gray-800">{headName}</p>
-              <p className="text-gray-600 text-sm">{headTitle}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Vision & Mission */}
-        <div className="mb-8 space-y-6">
-          <div>
-            <h4 className="font-bold text-gray-800 mb-3 flex items-center space-x-2 space-x-reverse">
-              <span className="text-blue-600">
-                <UnitIcon iconType="eye" className="w-5 h-5" />
-              </span>
-              <span>الرؤية</span>
-            </h4>
-            <p className="text-gray-600 bg-blue-50 p-4 rounded-lg">{unitVision}</p>
           </div>
           
-          <div>
-            <h4 className="font-bold text-gray-800 mb-3 flex items-center space-x-2 space-x-reverse">
-              <span className="text-green-600">
-                <UnitIcon iconType="target" className="w-5 h-5" />
-              </span>
-              <span>الرسالة</span>
-            </h4>
-            <p className="text-gray-600 bg-green-50 p-4 rounded-lg">{unitMission}</p>
+          {/* Stats overlay */}
+          <div className="absolute bottom-4 right-4 bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30">
+            <div className="flex items-center space-x-4 space-x-reverse text-white text-sm">
+              <div className="text-center">
+                <div className="font-bold">{safeData.staffCount + 1}</div>
+                <div className="opacity-90">عضو</div>
+              </div>
+              <div className="w-px h-8 bg-white/30"></div>
+              <div className="text-center">
+                <div className="font-bold">{safeData.servicesCount}</div>
+                <div className="opacity-90">خدمة</div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Objectives */}
-        {unit?.objectives && Array.isArray(unit.objectives) && unit.objectives.length > 0 && (
-          <div className="mb-8">
-            <h4 className="font-bold text-gray-800 mb-4 flex items-center space-x-2 space-x-reverse">
-              <span className="text-purple-600">
-                <UnitIcon iconType="clipboard" className="w-5 h-5" />
-              </span>
-              <span>الأهداف</span>
-            </h4>
-            <div className="space-y-2">
-              {unit.objectives.map((objective, index) => (
-                <div key={index} className="flex items-start space-x-3 space-x-reverse">
-                  <div className="w-6 h-6 mr-0 ml-[4px] bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm font-bold mt-0.5">
-                    {index + 1}
+        {/* Content */}
+        <div className="p-6">
+          {/* Department Head */}
+          {safeData.headName !== 'غير محدد' && (
+            <div className="mb-6">
+              <h4 className="text-lg font-semibold text-gray-800 mb-3">رئيس الوحدة</h4>
+              <div className="flex items-center space-x-reverse space-x-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full ml-[5px] flex items-center justify-center overflow-hidden">
+                  {safeData.headPhoto ? (
+                    <img
+                      src={urlFor(safeData.headPhoto).url()}
+                      alt={safeData.headName}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-white font-semibold text-sm">د</span>
+                  )}
+                </div>
+                <div>
+                  <p className="font-medium text-gray-800">{safeData.headName}</p>
+                  <p className="text-sm text-gray-600">{safeData.headTitle}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Vision & Mission Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl p-4">
+              <h5 className="font-semibold text-gray-800 mb-2 flex items-center">
+                <svg className="w-4 h-4 text-blue-600 ml-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                </svg>
+                الرؤية
+              </h5>
+              <p className="text-gray-700 text-sm line-clamp-3">{safeData.vision}</p>
+            </div>
+            
+            <div className="bg-gradient-to-br from-green-50 to-emerald-100 rounded-xl p-4">
+              <h5 className="font-semibold text-gray-800 mb-2 flex items-center">
+                <svg className="w-4 h-4 text-green-600 ml-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                الرسالة
+              </h5>
+              <p className="text-gray-700 text-sm line-clamp-3">{safeData.mission}</p>
+            </div>
+          </div>
+
+          {/* Key Services/Committees */}
+          <div className="mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {unit?.services && unit.services.length > 0 && (
+                <div>
+                  <h5 className="font-semibold text-gray-800 mb-3 flex items-center">
+                    <svg className="w-4 h-4 text-orange-600 ml-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    الخدمات الرئيسية
+                  </h5>
+                  <div className="space-y-2">
+                    {unit.services.slice(0, 2).map((service, index) => (
+                      <div key={index} className="flex items-start gap-2">
+                        <div className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <span className="text-gray-700 text-sm">{service}</span>
+                      </div>
+                    ))}
+                    {unit.services.length > 2 && (
+                      <p className="text-gray-500 text-xs">+{unit.services.length - 2} خدمات أخرى</p>
+                    )}
                   </div>
-                  <p className="text-gray-600 flex-1">{extractText(objective)}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Activities */}
-        {unit?.activities && Array.isArray(unit.activities) && unit.activities.length > 0 && (
-          <div className="mb-8">
-            <h4 className="font-bold text-gray-800 mb-4 flex items-center space-x-2 space-x-reverse">
-              <span className="text-orange-600">
-                <UnitIcon iconType="lightning" className="w-5 h-5" />
-              </span>
-              <span>الأنشطة</span>
-            </h4>
-            <div className="grid grid-cols-1 gap-2">
-              {unit.activities.map((activity, index) => (
-                <div key={index} className="flex items-center space-x-2 space-x-reverse bg-orange-50 p-3 rounded-lg">
-                  <svg className="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
-                  </svg>
-                  <span className="text-gray-700 text-sm">{extractText(activity)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Committees */}
-        {unit?.committees && Array.isArray(unit.committees) && unit.committees.length > 0 && (
-          <div className="mb-8">
-            <h4 className="font-bold text-gray-800 mb-4 flex items-center space-x-2 space-x-reverse">
-              <span className="text-indigo-600">
-                <UnitIcon iconType="people" className="w-5 h-5" />
-              </span>
-              <span>اللجان</span>
-            </h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {unit.committees.map((committee, index) => (
-                <div key={index} className="bg-indigo-50 p-3 rounded-lg text-center">
-                  <span className="text-indigo-700 font-medium text-sm">{extractText(committee)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Publications */}
-        {unit?.publications && Array.isArray(unit.publications) && unit.publications.length > 0 && (
-          <div className="mb-8">
-            <h4 className="font-bold text-gray-800 mb-4 flex items-center space-x-2 space-x-reverse">
-              <span className="text-pink-600">
-                <UnitIcon iconType="books" className="w-5 h-5" />
-              </span>
-              <span>المنشورات</span>
-            </h4>
-            <div className="space-y-2">
-              {unit.publications.map((publication, index) => (
-                <div key={index} className="flex items-center space-x-2 space-x-reverse bg-pink-50 p-3 rounded-lg">
-                  <svg className="w-4 h-4 text-pink-500 mr-0 ml-[4px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  <span className="text-gray-700 text-sm">{extractText(publication)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Contact Information */}
-        {unit?.contact && (
-          <div className="bg-gray-50 p-6 rounded-xl">
-            <h4 className="font-bold text-gray-800 mb-4">معلومات التواصل</h4>
-            <div className="space-y-3">
-              {unit.contact.phone && (
-                <div className="flex items-center space-x-3 space-x-reverse">
-                  <svg className="w-5 h-5 text-blue-600 mr-0 ml-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  <a href={`tel:${unit?.contact?.phone}`} className="text-gray-700 hover:text-blue-600">
-                    {extractText(unit?.contact?.phone) || unit?.contact?.phone}
-                  </a>
                 </div>
               )}
               
-              {unit.contact.email && (
-                <div className="flex items-center space-x-3 space-x-reverse">
-                  <svg className="w-5 h-5 text-green-600 mr-0 ml-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <a href={`mailto:${unit?.contact?.email}`} className="text-gray-700 hover:text-green-600">
-                    {extractText(unit?.contact?.email) || unit?.contact?.email}
-                  </a>
-                </div>
-              )}
-              
-              {unit.contact.office && (
-                <div className="flex items-center space-x-3 space-x-reverse">
-                  <svg className="w-5 h-5 text-purple-600 mr-0 ml-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <span className="text-gray-700">{extractText(unit?.contact?.office) || unit?.contact?.office}</span>
+              {unit?.committees && unit.committees.length > 0 && (
+                <div>
+                  <h5 className="font-semibold text-gray-800 mb-3 flex items-center">
+                    <svg className="w-4 h-4 text-purple-600 ml-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    اللجان
+                  </h5>
+                  <div className="space-y-2">
+                    {unit.committees.slice(0, 2).map((committee, index) => (
+                      <div key={index} className="flex items-start gap-2">
+                        <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                        <span className="text-gray-700 text-sm">{committee}</span>
+                      </div>
+                    ))}
+                    {unit.committees.length > 2 && (
+                      <p className="text-gray-500 text-xs">+{unit.committees.length - 2} لجان أخرى</p>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
           </div>
-        )}
+
+          {/* Staff Preview */}
+          {unit?.staff && unit.staff.length > 0 && (
+            <div className="mb-6">
+              <h5 className="font-semibold text-gray-800 mb-3 flex items-center">
+                <svg className="w-4 h-4 text-blue-600 ml-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                فريق العمل
+              </h5>
+              <div className="flex space-x-2 space-x-reverse">
+                {unit.staff.slice(0, 4).map((staffMember, index) => (
+                  <div key={staffMember._id || index} className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 border-2 border-white shadow-sm">
+                                       {staffMember.photo ? (
+                     <img
+                       src={urlFor(staffMember.photo).url()}
+                       alt={staffMember.name || 'عضو فريق العمل'}
+                       className="w-full h-full object-cover"
+                     />
+                   ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">
+                          {staffMember.name ? staffMember.name.charAt(0) : 'د'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {unit.staff.length > 4 && (
+                  <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center border-2 border-white shadow-sm">
+                    <span className="text-gray-600 text-xs font-bold">+{unit.staff.length - 4}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Call to Action */}
+          <div className="mt-6 pt-4 border-t border-gray-200">
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-xl text-center group-hover:from-blue-700 group-hover:to-purple-700 transition-all">
+              <div className="flex items-center justify-center space-x-2 space-x-reverse">
+                <span className="font-bold">عرض التفاصيل الكاملة</span>
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                </svg>
+              </div>
+              <p className="text-sm opacity-90 mt-1">اطلع على جميع الخدمات والأنشطة</p>
+            </div>
+          </div>
       </div>
-    </div>
+      </div>
+    </Link>
   )
 } 

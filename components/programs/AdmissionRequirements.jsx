@@ -2,7 +2,11 @@ export default function AdmissionRequirements() {
   const requirements = [
     {
       title: 'المتطلبات الأساسية',
-      icon: '📚',
+      icon: (
+        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+      ),
       items: [
         'شهادة الثانوية العامة أو ما يعادلها',
         'اجتياز اختبار القدرات العامة',
@@ -15,7 +19,11 @@ export default function AdmissionRequirements() {
     },
     {
       title: 'المتطلبات الصحية',
-      icon: '🏥',
+      icon: (
+        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      ),
       items: [
         'فحص طبي شامل معتمد',
         'خلو من الأمراض المعدية',
@@ -28,7 +36,11 @@ export default function AdmissionRequirements() {
     },
     {
       title: 'المستندات المطلوبة',
-      icon: '📋',
+      icon: (
+        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      ),
       items: [
         'صورة من الهوية الوطنية أو الإقامة',
         'أصل شهادة الثانوية العامة + صورة',
@@ -44,7 +56,11 @@ export default function AdmissionRequirements() {
     },
     {
       title: 'إجراءات التقديم',
-      icon: '📝',
+      icon: (
+        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+      ),
       items: [
         'التسجيل في البوابة الإلكترونية',
         'ملء نموذج التقديم بالكامل',
@@ -86,7 +102,7 @@ export default function AdmissionRequirements() {
               className={`bg-gradient-to-br ${req.bgColor} p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300`}
             >
               <div className="flex items-center space-x-4 space-x-reverse mb-6">
-                <div className={`w-16 h-16 bg-gradient-to-r ${req.color} rounded-full flex items-center justify-center text-2xl ml-5 mr-0`}>
+                <div className={`w-16 h-16 bg-gradient-to-r ${req.color} rounded-full flex items-center justify-center ml-5 mr-0`}>
                   {req.icon}
                 </div>
                 <h3 className="text-2xl font-bold text-gray-800">{req.title}</h3>

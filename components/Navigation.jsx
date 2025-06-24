@@ -44,7 +44,7 @@ const Navigation = ({ siteSettings }) => {
                 onClick={() => router.push("/")}
                 src="/logo.jpg"
                 alt="logo"
-                className="w-12 h-12 ml-4 rounded-lg object-cover cursor-pointer"
+                className="w-12 h-12 ml-4 rounded-full object-cover cursor-pointer"
               />
             )}
             <div>

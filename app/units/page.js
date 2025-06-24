@@ -339,9 +339,24 @@ export default async function UnitsPage() {
       <Navigation siteSettings={siteSettings} />
 
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50 mt-[80px] md:mt-[88px]">
-        <div className="section-container">
+      <section className="relative py-32 bg-gradient-to-br from-blue-50 via-white to-purple-50 mt-[80px] md:mt-[88px]">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div 
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, rgba(37, 99, 235, 0.25) 1px, transparent 0)`,
+              backgroundSize: '20px 20px'
+            }}
+          />
+        </div>
+
+        <div className="section-container relative z-10">
           <div className="text-center">
+            <div className="inline-flex items-center bg-blue-100 text-blue-800 rounded-full px-4 py-2 mb-6">
+              <span className="text-sm font-medium">كلية البنات الطبية - جامعة الأزهر</span>
+            </div>
+            
             <h1 className="text-5xl lg:text-6xl font-bold mb-6">
               <span className="gradient-text">وحدات الكلية</span>
             </h1>
@@ -350,6 +365,32 @@ export default async function UnitsPage() {
               تطوير التعليم الطبي وضمان الجودة والارتقاء بمستوى البحث العلمي
               والخدمات التعليمية.
             </p>
+
+            {/* Stats Preview */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto mt-12">
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+                <div className="text-3xl font-bold text-blue-600">{allUnits.length}</div>
+                <div className="text-sm text-gray-600">وحدة متخصصة</div>
+              </div>
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+                <div className="text-3xl font-bold text-green-600">
+                  {allUnits.reduce((sum, unit) => sum + ((unit?.staff?.length || 0) + (unit?.head ? 1 : 0)), 0)}
+                </div>
+                <div className="text-sm text-gray-600">عضو</div>
+              </div>
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+                <div className="text-3xl font-bold text-purple-600">
+                  {allUnits.reduce((sum, unit) => sum + (unit?.services?.length || 0), 0)}
+                </div>
+                <div className="text-sm text-gray-600">خدمة</div>
+              </div>
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg">
+                <div className="text-3xl font-bold text-orange-600">
+                  {allUnits.reduce((sum, unit) => sum + (unit?.committees?.length || 0), 0)}
+                </div>
+                <div className="text-sm text-gray-600">لجنة</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
