@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { urlFor } from "../lib/sanity";
+import { useRouter } from "next/navigation";
 
 const Navigation = ({ siteSettings }) => {
   // Use Sanity data if available, otherwise fallback
@@ -12,6 +13,7 @@ const Navigation = ({ siteSettings }) => {
     logo: null,
   };
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
 
   const navItems = [
     { name: "الرئيسية", href: "/" },
@@ -37,9 +39,10 @@ const Navigation = ({ siteSettings }) => {
               />
             ) : (
               <img
+                onClick={() => router.push("/")}
                 src="/logo.jpg"
                 alt="logo"
-                className="w-12 h-12 ml-4 rounded-lg object-cover"
+                className="w-12 h-12 ml-4 rounded-lg object-cover cursor-pointer"
               />
             )}
             <div>
