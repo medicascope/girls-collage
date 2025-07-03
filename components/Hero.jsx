@@ -37,7 +37,7 @@ const Hero = ({ heroData }) => {
       title: 'التميز الأكاديمي',
       subtitle: 'برامج دراسية متطورة ومناهج حديثة تواكب التطورات العالمية في التعليم الطبي',
       subtitleEn: 'Academic Excellence - Advanced curricula that keep pace with global developments',
-      backgroundImage: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      backgroundImage: 'https://gate.ahram.org.eg/Media/News/2021/6/9/19_2021-637588426251744159-174.jpg',
       statistics: [
         { number: '95%', label: 'نسبة النجاح', color: 'green' },
         { number: '85%', label: 'معدل التوظيف', color: 'blue' },

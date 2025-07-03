@@ -27,10 +27,14 @@ export default {
       type: 'string'
     },
     {
-      name: 'deanImage',
-      title: 'Dean Photo',
-      type: 'customImage',
-      validation: Rule => Rule.required()
+      name: 'deanImages',
+      title: 'Dean Photos',
+      type: 'array',
+      of: [{ type: 'customImage' }],
+      options: {
+        layout: 'grid',
+      },
+      validation: (Rule) => Rule.required().min(1),
     },
     {
       name: 'shortMessage',

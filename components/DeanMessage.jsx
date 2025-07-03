@@ -1,11 +1,22 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 
 import { urlFor } from '../lib/sanity'
 import PortableText from './PortableText'
+
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
+
+const mockImages = [
+  { url: '/assets/1.jpg', alt: 'معالي العميدة في مكتبها' },
+  { url: '/assets/2.jpg', alt: 'معالي العميدة خلال مؤتمر طبي' },
+  { url: '/assets/3.jpg', alt: 'معالي العميدة مع الطالبات' }
+];
 
 const DeanMessage = ({ deanMessageData }) => {
   const [isVisible, setIsVisible] = useState(false)
@@ -40,10 +51,15 @@ const DeanMessage = ({ deanMessageData }) => {
     title: 'كلمة معالي العميدة',
     deanName: 'د. فاطمة أحمد السالم',
     deanTitle: 'عميدة كلية البنات الطبية',
-    deanImage: null,
+    deanImages: [],
     shortMessage: 'أهلاً وسهلاً بكم في كلية البنات الطبية، حيث نسعى لتحقيق التميز في التعليم الطبي والبحث العلمي.',
     fullMessage: null
   }
+
+  const imagesToDisplay = (data.deanImages && data.deanImages.length > 0)
+    ? data.deanImages.map(img => ({ url: urlFor(img).url(), alt: img.alt || data.deanName }))
+    : mockImages;
+
   return (
     <section 
       ref={sectionRef}
@@ -57,15 +73,65 @@ const DeanMessage = ({ deanMessageData }) => {
           <div className={`relative transition-all duration-700 delay-200 ${
             isVisible ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 -translate-x-12 scale-95'
           }`}>
-            <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden card-shadow">
-              <img
-                src={data.deanImage?.asset ? urlFor(data.deanImage).width(500).height(600).url() : "https://d31nhj1t453igc.cloudfront.net/cloudinary/2022/Apr/08/imOSR3BLBDw2Xckl2c4R.jpg"}
-                alt={data.deanImage?.alt || "معالي العميدة - صورة رسمية"}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = "data:image/svg+xml,%3Csvg width='400' height='500' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='18' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eمعالي العميدة%3C/text%3E%3C/svg%3E"
+            <div className="relative w-full h-96 lg:h-[500px] rounded-2xl overflow-hidden card-shadow group">
+              <Swiper
+                modules={[Navigation, Pagination, Autoplay]}
+                spaceBetween={0}
+                slidesPerView={1}
+                navigation={{
+                  nextEl: '.swiper-button-next-custom',
+                  prevEl: '.swiper-button-prev-custom',
                 }}
-              />
+                pagination={{
+                  el: '.swiper-pagination-custom',
+                  clickable: true,
+                  renderBullet: (index, className) => {
+                    return `<span class="${className} !w-3 !h-3 !rounded-full !bg-white/50 !opacity-100 [&.swiper-pagination-bullet-active]:!bg-white"></span>`
+                  }
+                }}
+                autoplay={{ delay: 5000, disableOnInteraction: false }}
+                className="h-full w-full"
+                loop={imagesToDisplay.length > 1}
+              >
+                {imagesToDisplay.map((image, index) => (
+                  <SwiperSlide key={image.url || index}>
+                    <div className="relative w-full h-full">
+                      {/* Blurred background image */}
+                      <div 
+                        className="absolute inset-0 w-full h-full bg-cover bg-center"
+                        style={{
+                          backgroundImage: `url(${image.url})`,
+                          filter: 'blur(20px)',
+                          transform: 'scale(1.1)',
+                        }}
+                      />
+                      {/* Main image */}
+                      <img
+                        src={image.url}
+                        alt={image.alt || `${data.deanName} - صورة ${index + 1}`}
+                        className="relative z-10 w-full h-full object-contain"
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              
+              {/* Custom Navigation */}
+              {imagesToDisplay.length > 1 && (
+                <>
+                  <div className="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/20 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/40">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </div>
+                  <div className="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-black/20 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/40">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                  <div className="swiper-pagination-custom absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex space-x-2"></div>
+                </>
+              )}
             </div>
             
             {/* Decorative elements */}
