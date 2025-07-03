@@ -49,7 +49,7 @@ const DeanMessage = ({ deanMessageData }) => {
   // Fallback data if Sanity data is not available
   const data = deanMessageData || {
     title: 'كلمة معالي العميدة',
-    deanName: 'د. فاطمة أحمد السالم',
+    deanName: 'د. هناء العبيسي',
     deanTitle: 'عميدة كلية البنات الطبية',
     deanImages: [],
     shortMessage: 'أهلاً وسهلاً بكم في كلية البنات الطبية، حيث نسعى لتحقيق التميز في التعليم الطبي والبحث العلمي.',
