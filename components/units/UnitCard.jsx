@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link';
 import { urlFor } from '../../lib/sanity';
 import { PortableText } from '@portabletext/react';
@@ -35,8 +37,12 @@ const extractText = (content) => {
 
 // Helper function to get image URL with fallback
 const getImageUrl = (image) => {
-  if (image && image.asset) {
-    return urlFor(image).width(800).height(600).url();
+  if (image && image.asset && image.asset._ref) {
+    try {
+      return urlFor(image).width(800).height(600).url();
+    } catch (error) {
+      console.warn('Error generating image URL:', error);
+    }
   }
   return "data:image/svg+xml,%3Csvg width='800' height='600' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100%25' height='100%25' fill='%23f1f5f9'/%3E%3Ctext x='50%25' y='50%25' font-size='24' text-anchor='middle' dy='.3em' fill='%236b7280'%3Eوحدة الكلية%3C/text%3E%3C/svg%3E";
 };
@@ -116,7 +122,7 @@ export default function UnitCard({ unit }) {
               <h4 className="text-lg font-semibold text-gray-800 mb-3">رئيس الوحدة</h4>
               <div className="flex items-center space-x-reverse space-x-3">
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full ml-[5px] flex items-center justify-center overflow-hidden">
-                  {safeData.headPhoto ? (
+                  {safeData.headPhoto && safeData.headPhoto.asset && safeData.headPhoto.asset._ref ? (
                     <img
                       src={urlFor(safeData.headPhoto).url()}
                       alt={safeData.headName}
@@ -218,13 +224,13 @@ export default function UnitCard({ unit }) {
               <div className="flex space-x-2 space-x-reverse">
                 {unit.staff.slice(0, 4).map((staffMember, index) => (
                   <div key={staffMember._id || index} className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 border-2 border-white shadow-sm">
-                                       {staffMember.photo ? (
-                     <img
-                       src={urlFor(staffMember.photo).url()}
-                       alt={staffMember.name || 'عضو فريق العمل'}
-                       className="w-full h-full object-cover"
-                     />
-                   ) : (
+                    {staffMember.photo && staffMember.photo.asset && staffMember.photo.asset._ref ? (
+                      <img
+                        src={urlFor(staffMember.photo).url()}
+                        alt={staffMember.name || 'عضو فريق العمل'}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
                       <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
                         <span className="text-white text-xs font-bold">
                           {staffMember.name ? staffMember.name.charAt(0) : 'د'}
@@ -254,7 +260,7 @@ export default function UnitCard({ unit }) {
               <p className="text-sm opacity-90 mt-1">اطلع على جميع الخدمات والأنشطة</p>
             </div>
           </div>
-      </div>
+        </div>
       </div>
     </Link>
   )
